@@ -26,12 +26,11 @@ def create_training_images(origin_img_dir):
     cnt = 0
     for i_path in image_paths:
         image = cv2.imread(i_path)
-        for i in range(4):
-            cv2.imwrite(os.path.join(CUR_DIR, 'training_dir', f"image{cnt}.jpg"), image)
-            cnt += 1
+        cv2.imwrite(os.path.join(CUR_DIR, 'training_dir', f"image{cnt}.jpg"), image)
+        cnt += 1
 
     return
 
 
 if __name__ == '__main__':
-    create_training_images(origin_img_dir="/media/main/Data/Task/SportCardMatcher/Test Images/Graded")
+    create_training_images(origin_img_dir="/media/main/Data/Task/StampDetectorArduino/Examples2")
