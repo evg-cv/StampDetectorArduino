@@ -9,6 +9,7 @@ class ArduinoCom:
     def __init__(self):
 
         self.ard = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=5)
+        self.ard_res = "detect"
         time.sleep(2)
 
     def communicate_arduino(self, coordinates):
@@ -20,9 +21,10 @@ class ArduinoCom:
             if response:
                 break
             time.sleep(0.1)
-        response = response.decode().replace("\r\n", "")
+        self.ard_res = response.decode().replace("\r\n", "")
+        print(f"[INFO] Arduino Command: {self.ard_res}")
 
-        return response
+        return
 
     def close_port(self):
 
