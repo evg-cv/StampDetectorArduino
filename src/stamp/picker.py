@@ -9,6 +9,14 @@ class StampPicker:
     def __init__(self):
         self.stamp_detector = StampDetector()
         self.ard_com = ArduinoCom()
+        self.frame = None
+
+    def click_event(self, event, x, y, flags, params):
+
+        if event == cv2.EVENT_LBUTTONDOWN:
+            print(x, ' ', y)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(self.frame, str(x) + ',' + str(y), (x, y), font, 1, (255, 0, 0), 2)
 
     def run(self):
         cap = cv2.VideoCapture(0)
@@ -16,13 +24,13 @@ class StampPicker:
         stamp_x = 0
         stamp_y = 0
         while cap.isOpened():
-            _, frame = cap.read()
+            _, self.frame = cap.read()
             if self.ard_com.ard_res == "detect":
-                detected_stamp = self.stamp_detector.detect_from_images(frame=frame)
+                detected_stamp = self.stamp_detector.detect_from_images(frame=self.frame)
                 if detected_stamp:
                     stamp_x = int((detected_stamp[0] + detected_stamp[2]) / 2)
                     stamp_y = int((detected_stamp[1] + detected_stamp[3]) / 2)
-                    cv2.circle(frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
+                    cv2.circle(self.frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
                     print(f"[INFO] Pick Stamp at {stamp_x}, {stamp_y}")
                     ard_threading = threading.Thread(target=self.ard_com.communicate_arduino,
                                                      args=[f"{stamp_x},{stamp_y}", ])
@@ -30,8 +38,9 @@ class StampPicker:
                     self.ard_com.ard_res = None
 
             if stamp_x != 0 and stamp_y != 0:
-                cv2.circle(frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
-            cv2.imshow("Stamp Detector", frame)
+                cv2.circle(self.frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
+            cv2.setMouseCallback('image', self.click_event)
+            cv2.imshow("Stamp Detector", self.frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         ard_threading.join()
