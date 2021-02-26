@@ -14,9 +14,7 @@ class StampPicker:
     def click_event(self, event, x, y, flags, params):
 
         if event == cv2.EVENT_LBUTTONDOWN:
-            print(x, ' ', y)
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            cv2.putText(self.frame, str(x) + ',' + str(y), (x, y), font, 1, (255, 0, 0), 2)
+            print(f"[INFO] Point X: {x}, Point Y: {y}")
 
     def run(self):
         cap = cv2.VideoCapture(0)
@@ -39,8 +37,8 @@ class StampPicker:
 
             if stamp_x != 0 and stamp_y != 0:
                 cv2.circle(self.frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
-            cv2.setMouseCallback('image', self.click_event)
             cv2.imshow("Stamp Detector", self.frame)
+            cv2.setMouseCallback('Stamp Detector', self.click_event)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         ard_threading.join()
