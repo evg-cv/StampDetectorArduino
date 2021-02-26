@@ -20,6 +20,8 @@ class StampPicker:
     def run(self):
         cap = cv2.VideoCapture(0)
         ard_threading = None
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3264)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2448)
         stamp_x = 0
         stamp_y = 0
         while cap.isOpened():
@@ -38,7 +40,7 @@ class StampPicker:
 
             if stamp_x != 0 and stamp_y != 0:
                 cv2.circle(self.frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
-            cv2.imshow("Stamp Detector", self.frame)
+            cv2.imshow("Stamp Detector", cv2.resize(self.frame, None, (1600, 1200)))
             cv2.setMouseCallback('Stamp Detector', self.click_event)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
