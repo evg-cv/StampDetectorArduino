@@ -11,7 +11,8 @@ class StampPicker:
         self.ard_com = ArduinoCom()
         self.frame = None
 
-    def click_event(self, event, x, y, flags, params):
+    @staticmethod
+    def click_event(event, x, y, flags, params):
 
         if event == cv2.EVENT_LBUTTONDOWN:
             print(f"[INFO] Point X: {x}, Point Y: {y}")
