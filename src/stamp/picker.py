@@ -15,7 +15,7 @@ class StampPicker:
     def click_event(event, x, y, flags, params):
 
         if event == cv2.EVENT_LBUTTONDOWN:
-            print(f"[INFO] Point X: {x}, Point Y: {y}")
+            print(f"[INFO] Point X: {int(x * 3264 / 1600)}, Point Y: {int(y * 2448 / 1200)}")
 
     def run(self):
         cap = cv2.VideoCapture(0)
