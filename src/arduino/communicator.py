@@ -10,19 +10,25 @@ class ArduinoCom:
 
         self.ard = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=5)
         self.ard_res = "detect"
+        self.receive_ret = True
         time.sleep(2)
 
-    def communicate_arduino(self, coordinates):
+    def send_command_arduino(self, coordinates):
 
         coordinates += "\n"
         self.ard.write(coordinates.encode("utf-8"))
+
+        return
+
+    def receive_command_arduino(self):
+
         while True:
-            response = self.ard.read(self.ard.inWaiting())
-            if response:
+            if not self.receive_ret:
                 break
+            response = self.ard.read(self.ard.inWaiting())
+            self.ard_res = response.decode().replace("\r\n", "")
+            print(f"[INFO] Arduino Command: {self.ard_res}")
             time.sleep(0.1)
-        self.ard_res = response.decode().replace("\r\n", "")
-        print(f"[INFO] Arduino Command: {self.ard_res}")
 
         return
 
@@ -37,5 +43,4 @@ if __name__ == '__main__':
     ard_com = ArduinoCom()
 
     for i in range(3):
-        res = ard_com.communicate_arduino(coordinates="2,3")
-        print(res)
+        ard_com.send_command_arduino(coordinates="2,3")

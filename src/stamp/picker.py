@@ -19,11 +19,12 @@ class StampPicker:
 
     def run(self):
         cap = cv2.VideoCapture(0)
-        ard_threading = None
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3264)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2448)
         stamp_x = 0
         stamp_y = 0
+        ard_threading = threading.Thread(target=self.ard_com.receive_ret)
+        ard_threading.start()
         while cap.isOpened():
             _, self.frame = cap.read()
             if self.ard_com.ard_res == "detect":
@@ -33,9 +34,7 @@ class StampPicker:
                     stamp_y = int((detected_stamp[1] + detected_stamp[3]) / 2)
                     cv2.circle(self.frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
                     print(f"[INFO] Pick Stamp at {stamp_x}, {stamp_y}")
-                    ard_threading = threading.Thread(target=self.ard_com.communicate_arduino,
-                                                     args=[f"{stamp_x},{stamp_y}", ])
-                    ard_threading.start()
+                    self.ard_com.send_command_arduino(coordinates=f"{stamp_x},{stamp_y}")
                     self.ard_com.ard_res = None
 
             if stamp_x != 0 and stamp_y != 0:
@@ -44,6 +43,7 @@ class StampPicker:
             cv2.setMouseCallback('Stamp Detector', self.click_event)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+        self.ard_com.receive_ret = False
         ard_threading.join()
         cap.release()
         cv2.destroyAllWindows()
