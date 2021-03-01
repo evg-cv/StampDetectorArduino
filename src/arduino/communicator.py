@@ -26,8 +26,9 @@ class ArduinoCom:
             if not self.receive_ret:
                 break
             response = self.ard.read(self.ard.inWaiting())
-            self.ard_res = response.decode().replace("\r\n", "")
-            if self.ard_res != "":
+            decode_res = response.decode().replace("\r\n", "")
+            if decode_res != "":
+                self.ard_res = decode_res
                 print(f"[INFO] Arduino Command: {self.ard_res}")
             time.sleep(0.1)
 
