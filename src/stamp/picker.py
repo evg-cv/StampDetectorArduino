@@ -23,7 +23,7 @@ class StampPicker:
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2448)
         stamp_x = 0
         stamp_y = 0
-        ard_threading = threading.Thread(target=self.ard_com.receive_ret)
+        ard_threading = threading.Thread(target=self.ard_com.receive_command_arduino)
         ard_threading.start()
         while cap.isOpened():
             _, self.frame = cap.read()
