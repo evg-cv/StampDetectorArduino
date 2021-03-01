@@ -27,7 +27,8 @@ class ArduinoCom:
                 break
             response = self.ard.read(self.ard.inWaiting())
             self.ard_res = response.decode().replace("\r\n", "")
-            print(f"[INFO] Arduino Command: {self.ard_res}")
+            if self.ard_res != "":
+                print(f"[INFO] Arduino Command: {self.ard_res}")
             time.sleep(0.1)
 
         return
