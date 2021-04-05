@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 # import time
 
-from settings import MODEL_PATH
+from settings import STAMP_MODEL_PATH, CONFIDENCE
 
 
 class StampDetector:
@@ -12,7 +12,7 @@ class StampDetector:
         detection_graph = tf.Graph()
         with detection_graph.as_default():
             od_graph_def = tf.GraphDef()
-            with tf.gfile.GFile(MODEL_PATH, 'rb') as fid:
+            with tf.gfile.GFile(STAMP_MODEL_PATH, 'rb') as fid:
                 serialized_graph = fid.read()
                 od_graph_def.ParseFromString(serialized_graph)
                 tf.import_graph_def(od_graph_def, name='')
@@ -45,19 +45,28 @@ class StampDetector:
         detected_scores = []
 
         for i in range(len(scores[0])):
-            left, top = int(boxes[0][i][1] * frm_width), int(boxes[0][i][0] * frm_height)
-            right, bottom = int(boxes[0][i][3] * frm_width), int(boxes[0][i][2] * frm_height)
-            detected_rect_list.append([left, top, right, bottom])
-            detected_scores.append(scores[0][i])
-            # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 1)
+            if scores[0][i] >= CONFIDENCE:
+                left, top = int(boxes[0][i][1] * frm_width), int(boxes[0][i][0] * frm_height)
+                right, bottom = int(boxes[0][i][3] * frm_width), int(boxes[0][i][2] * frm_height)
+                detected_rect_list.append([left, top, right, bottom])
+                detected_scores.append(scores[0][i])
+                # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 1)
         # cv2.imshow("Stamps", cv2.resize(frame, None, fx=0.5, fy=0.5))
         # cv2.waitKey()
-        max_detected_stamp_rect = detected_rect_list[detected_scores.index(max(detected_scores))]
+        # max_detected_stamp_rect = detected_rect_list[detected_scores.index(max(detected_scores))]
 
-        return max_detected_stamp_rect
+        return detected_rect_list, detected_scores
 
 
 if __name__ == '__main__':
+    import glob
+    import os
 
     stamp_detector = StampDetector()
-    _ = stamp_detector.detect_from_images(frame=cv2.imread(""))
+    # rect_len = stamp_detector.detect_from_images(frame=cv2.imread(""))
+    img_files = glob.glob(os.path.join("", "*.jpg"))
+
+    for i_file in img_files:
+        rect_len, _ = stamp_detector.detect_from_images(frame=cv2.imread(i_file))
+        if len(rect_len) < 2:
+            print(f"[WARN] {i_file}: {rect_len}")

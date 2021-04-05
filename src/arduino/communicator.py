@@ -1,22 +1,25 @@
+import configparser
 import serial
 import time
 
-from settings import ARDUINO_PORT, BAUD_RATE
+from settings import CONFIG_FILE_PATH, BAUD_RATE
 
 
 class ArduinoCom:
 
     def __init__(self):
-
-        self.ard = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=5)
+        params = configparser.ConfigParser()
+        params.read(CONFIG_FILE_PATH)
+        self.ard = serial.Serial(params.get('DEFAULT', 'arduino_port'), BAUD_RATE, timeout=5)
         self.ard_res = "detect"
         self.receive_ret = True
         time.sleep(2)
 
-    def send_command_arduino(self, coordinates):
+    def send_command_arduino(self, command):
 
-        coordinates += "\n"
-        self.ard.write(coordinates.encode("utf-8"))
+        command += "\n"
+        print(f"[INFO] To Arduino: {command}")
+        self.ard.write(command.encode("utf-8"))
 
         return
 
@@ -29,7 +32,7 @@ class ArduinoCom:
             decode_res = response.decode().replace("\r\n", "")
             if decode_res != "":
                 self.ard_res = decode_res
-                print(f"[INFO] Arduino Command: {self.ard_res}")
+                print(f"[INFO] From Arduino: {self.ard_res}")
             time.sleep(0.1)
 
         return
@@ -45,4 +48,4 @@ if __name__ == '__main__':
     ard_com = ArduinoCom()
 
     for i in range(3):
-        ard_com.send_command_arduino(coordinates="2,3")
+        ard_com.send_command_arduino(command="2,3")

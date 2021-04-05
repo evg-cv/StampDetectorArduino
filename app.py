@@ -1,5 +1,5 @@
-from src.stamp.picker import StampPicker
+from src.stamp.controller import StampController
 
 
 if __name__ == '__main__':
-    StampPicker().run()
+    StampController().run()
