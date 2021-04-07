@@ -58,7 +58,7 @@ class StampController:
                 _, bottom_frame = bottom_cap.read()
                 cv2.imshow("Top Frame", top_frame)
                 cv2.imshow("Bottom Frame", bottom_frame)
-                cv2.waitKey()
+                cv2.waitKey(1000)
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
                 bottom_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=bottom_frame)
                 if len(top_stamps_rect) == 1 and len(bottom_stamps_rect) == 1:

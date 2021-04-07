@@ -69,7 +69,7 @@ This process is iterated by communicating between Arduino and PC.
     * contrast: int value between -127 and 127 for contrast
     * sharpness: bool value with true and false for sharpness
     * white_balance: bool value with true and false for white balance
-    * collection_number: int value of stamp number in one collection
+    * collection_number: int value of collection number
 
 - In the case of Ubuntu OS, please run the following command in the terminal.
 
