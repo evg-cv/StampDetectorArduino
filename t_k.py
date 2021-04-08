@@ -14,4 +14,5 @@ while True:
         break
 cap1.release()
 cap2.release()
+cap3.release()
 cv2.destroyAllWindows()

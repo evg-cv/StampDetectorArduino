@@ -93,6 +93,8 @@ class StampController:
         self.ard_com.receive_ret = False
         ard_threading.join()
         cap.release()
+        bottom_cap.release()
+        top_cap.release()
         cv2.destroyAllWindows()
 
 
