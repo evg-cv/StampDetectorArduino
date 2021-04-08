@@ -34,14 +34,14 @@ class StampController:
     def run(self):
         cap = cv2.VideoCapture(0)
         top_cap = cv2.VideoCapture(1)
-        bottom_cap = cv2.VideoCapture(2)
+        bottom_cap = cv2.VideoCapture(0)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3264)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2448)
         stamp_x = 0
         stamp_y = 0
         ard_threading = threading.Thread(target=self.ard_com.receive_command_arduino)
         ard_threading.start()
-        while cap.isOpened():
+        while True:
             _, self.frame = cap.read()
             if self.ard_com.ard_res == "detect":
                 detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=self.frame)
