@@ -45,8 +45,8 @@ class StampController:
             _, self.frame = cap.read()
             if self.ard_com.ard_res == "detect":
                 detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=self.frame)
-                detected_stamp = detected_stamp_rect[detected_stamp_scores.index(max(detected_stamp_scores))]
-                if detected_stamp:
+                if detected_stamp_scores:
+                    detected_stamp = detected_stamp_rect[detected_stamp_scores.index(max(detected_stamp_scores))]
                     stamp_x = int((detected_stamp[0] + detected_stamp[2]) / 2)
                     stamp_y = int((detected_stamp[1] + detected_stamp[3]) / 2)
                     cv2.circle(self.frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
