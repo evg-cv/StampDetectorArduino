@@ -27,7 +27,7 @@ class StampController:
 
     def get_stamp_side(self, frame_path):
         frame_feature = self.image_feature.get_feature_from_file(img_path=frame_path)
-        stamp_side = self.side_model.predict(frame_feature)[0]
+        stamp_side = self.side_model.predict([frame_feature])[0]
 
         return stamp_side
 
@@ -99,4 +99,4 @@ class StampController:
 
 
 if __name__ == '__main__':
-    StampController().run()
+    StampController().get_stamp_side(frame_path="")
