@@ -60,8 +60,8 @@ class StampController:
             if self.ard_com.ard_res == "moved":
                 _, top_frame = top_cap.read()
                 _, bottom_frame = bottom_cap.read()
-                cv2.imshow("Top Frame", cv2.resize(top_frame, (1600, 1200)))
-                cv2.imshow("Bottom Frame", cv2.resize(bottom_frame, (1600, 1200)))
+                cv2.imshow("Top Frame", cv2.resize(top_frame, (640, 480)))
+                cv2.imshow("Bottom Frame", cv2.resize(bottom_frame, (640, 480)))
                 cv2.waitKey(1000)
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
                 bottom_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=bottom_frame)
