@@ -35,8 +35,12 @@ class StampController:
         cap = cv2.VideoCapture(1)
         top_cap = cv2.VideoCapture(2)
         bottom_cap = cv2.VideoCapture(0)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3264)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2448)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
+        top_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
+        top_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
+        bottom_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
+        bottom_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
         stamp_x = 0
         stamp_y = 0
         ard_threading = threading.Thread(target=self.ard_com.receive_command_arduino)

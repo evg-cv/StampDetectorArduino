@@ -1,6 +1,8 @@
 import cv2
 
 cap1 = cv2.VideoCapture(0)
+cap1.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
+cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
 # cap2 = cv2.VideoCapture(1)
 cap3 = cv2.VideoCapture(2)
 while True:
