@@ -74,6 +74,8 @@ class StampAligner:
             print(f"[INFO] Successfully saved the final StampPaper Image into "
                   f"{os.path.join(OUTPUT_DIR, f'StampPaper{cnt_index}.jpg')}")
             self.stamp_status = []
+            self.align_status = "Init"
+            self.current_height = 0
 
             return "complete"
         else:
