@@ -66,6 +66,8 @@ class StampController:
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
                 bottom_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=bottom_frame)
                 if len(top_stamps_rect) == 1 and len(bottom_stamps_rect) == 1:
+                    print("[INFO] Single Detected!")
+                    self.ard_com.send_command_arduino(command="single")
                     top_stamp_roi = top_frame[top_stamps_rect[0][1]:
                                               top_stamps_rect[0][3], top_stamps_rect[0][0]:top_stamps_rect[0][2]]
                     cv2.imwrite(TOP_IMAGE_PATH, top_stamp_roi)
@@ -85,7 +87,8 @@ class StampController:
                     res = self.stamp_aligner.align_stamps(stamp_frame=final_stamp_image)
                     self.ard_com.send_command_arduino(command=res)
                 else:
-                    self.ard_com.send_command_arduino(command="retry")
+                    print("[INFO] Multi or None Detected")
+                    self.ard_com.send_command_arduino(command="none")
                 self.ard_com.ard_res = None
 
             if stamp_x != 0 and stamp_y != 0:
