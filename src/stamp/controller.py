@@ -33,7 +33,7 @@ class StampController:
 
     def run(self):
         cap = cv2.VideoCapture(1)
-        top_cap = cv2.VideoCapture(1)
+        top_cap = cv2.VideoCapture(2)
         bottom_cap = cv2.VideoCapture(0)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3264)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2448)
@@ -56,8 +56,8 @@ class StampController:
             if self.ard_com.ard_res == "moved":
                 _, top_frame = top_cap.read()
                 _, bottom_frame = bottom_cap.read()
-                cv2.imshow("Top Frame", top_frame)
-                cv2.imshow("Bottom Frame", bottom_frame)
+                cv2.imshow("Top Frame", cv2.resize(top_frame, (1600, 1200)))
+                cv2.imshow("Bottom Frame", cv2.resize(bottom_frame, (1600, 1200)))
                 cv2.waitKey(1000)
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
                 bottom_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=bottom_frame)
