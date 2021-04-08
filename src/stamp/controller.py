@@ -32,7 +32,7 @@ class StampController:
         return stamp_side
 
     def run(self):
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(1)
         top_cap = cv2.VideoCapture(1)
         bottom_cap = cv2.VideoCapture(0)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3264)
