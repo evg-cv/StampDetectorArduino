@@ -68,12 +68,12 @@ class StampController:
                 if len(top_stamps_rect) == 1 and len(bottom_stamps_rect) == 1:
                     print("[INFO] Single Detected!")
                     self.ard_com.send_command_arduino(command="single")
-                    top_stamp_roi = top_frame[top_stamps_rect[0][1]:
-                                              top_stamps_rect[0][3], top_stamps_rect[0][0]:top_stamps_rect[0][2]]
+                    top_stamp_roi = top_frame[top_stamps_rect[0][1] - 20:top_stamps_rect[0][3] + 20,
+                                              top_stamps_rect[0][0] - 20:top_stamps_rect[0][2] + 20]
                     cv2.imwrite(TOP_IMAGE_PATH, top_stamp_roi)
                     bottom_stamp_roi = \
-                        bottom_frame[bottom_stamps_rect[0][1]:
-                                     bottom_stamps_rect[0][3], bottom_stamps_rect[0][0]:bottom_stamps_rect[0][2]]
+                        bottom_frame[bottom_stamps_rect[0][1] - 20:bottom_stamps_rect[0][3] + 20,
+                                     bottom_stamps_rect[0][0] - 20:bottom_stamps_rect[0][2] + 20]
                     cv2.imwrite(BOTTOM_IMAGE_PATH, bottom_stamp_roi)
                     if self.get_stamp_side(frame_path=TOP_IMAGE_PATH) == "front":
                         front_stamp_image = top_stamp_roi
