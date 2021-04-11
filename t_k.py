@@ -73,5 +73,5 @@ def display_cam_view():
 
 
 if __name__ == '__main__':
-    CamThread().run()
-    # display_cam_view()
+    # CamThread().run()
+    display_cam_view()
