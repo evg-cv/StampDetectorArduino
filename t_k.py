@@ -54,7 +54,7 @@ def display_cam_view():
     # cap1.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
     # cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
     cap2 = cv2.VideoCapture(1, cv2.CAP_DSHOW)
-    cap3 = cv2.VideoCapture(2, cv2.CAP_DSHOW)
+    cap3 = cv2.VideoCapture(3, cv2.CAP_DSHOW)
     while True:
         frame1_ret, frame1 = cap1.read()
         # print(frame1.shape[:2])
