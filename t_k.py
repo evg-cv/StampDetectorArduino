@@ -61,9 +61,12 @@ def display_cam_view():
         _, frame2 = cap2.read()
         _, frame3 = cap3.read()
         # print(frame3.shape[:2])
-        cv2.imshow("Frame1", frame1)
-        cv2.imshow("Frame2", frame2)
-        cv2.imshow("Frame3", frame3)
+        if frame1 is not None:
+            cv2.imshow("Frame1", frame1)
+        if frame2 is not None:
+            cv2.imshow("Frame2", frame2)
+        if frame3 is not None:
+            cv2.imshow("Frame3", frame3)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap1.release()
