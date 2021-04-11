@@ -88,6 +88,7 @@ class StampController:
                             front_stamp_image = bottom_stamp_roi
                         else:
                             self.ard_com.send_command_arduino(command="retry")
+                            self.ard_com.ard_res = None
                             continue
                     final_stamp_image = rotate_stamp(frame=front_stamp_image)
                     res = self.stamp_aligner.align_stamps(stamp_frame=final_stamp_image)
