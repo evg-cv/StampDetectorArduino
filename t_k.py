@@ -59,7 +59,7 @@ def display_cam_view():
     while True:
         _, frame1 = cap1.read()
         # print(frame1.shape[:2])
-        _, frame2 = cap2.read()/
+        # _, frame2 = cap2.read()
         _, frame3 = cap3.read()
         # print(frame3.shape[:2])
         cv2.imshow("Frame1", frame1)
