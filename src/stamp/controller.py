@@ -1,17 +1,23 @@
 import threading
 import cv2
 import joblib
+import configparser
 
 from src.stamp.detector import StampDetector
 from src.arduino.communicator import ArduinoCom
 from src.feature.extractor import ImageFeature
 from src.stamp.aligner import StampAligner
 from src.stamp.rotator import rotate_stamp
-from settings import SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH
+from settings import SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH, CONFIG_FILE_PATH
 
 
 class StampController:
     def __init__(self):
+        params = configparser.ConfigParser()
+        params.read(CONFIG_FILE_PATH)
+        self.top_cam_num = int(params.get('DEFAULT', 'top_cam'))
+        self.bottom_cam = int(params.get('DEFAULT', 'bottom_cam'))
+        self.stamp_detector_cam_num = int(params.get('DEFAULT', 'stamp_detector_cam'))
         self.stamp_detector = StampDetector()
         self.ard_com = ArduinoCom()
         self.stamp_aligner = StampAligner()
@@ -32,9 +38,9 @@ class StampController:
         return stamp_side
 
     def run(self):
-        cap = cv2.VideoCapture(2)
-        top_cap = cv2.VideoCapture(0)
-        bottom_cap = cv2.VideoCapture(1)
+        cap = cv2.VideoCapture(self.stamp_detector_cam_num)
+        top_cap = cv2.VideoCapture(self.top_cam_num)
+        bottom_cap = cv2.VideoCapture(self.bottom_cam)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
         top_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)

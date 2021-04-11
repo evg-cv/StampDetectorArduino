@@ -70,6 +70,9 @@ This process is iterated by communicating between Arduino and PC.
     * sharpness: bool value with true and false for sharpness
     * white_balance: bool value with true and false for white balance
     * collection_number: int value of collection number
+    * top_cam: int value of top camera number
+    * bottom_cam: int value of bottom camera number
+    * stamp_detector_cam: int value of stamp detector camera number
 
 - In the case of Ubuntu OS, please run the following command in the terminal.
 
