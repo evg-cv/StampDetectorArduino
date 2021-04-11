@@ -34,6 +34,7 @@ class CamThread:
         top_frame_thread.start()
         bottom_frame_thread.start()
         stamp_frame_thread.start()
+        time.sleep(2)
         while True:
             cv2.imshow("Top Frame", self.top_frame)
             cv2.imshow("Bottom Frame", self.bottom_frame)
