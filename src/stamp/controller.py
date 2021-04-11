@@ -1,3 +1,4 @@
+import time
 import threading
 import cv2
 import joblib
@@ -23,7 +24,6 @@ class StampController:
         self.stamp_aligner = StampAligner()
         self.side_model = joblib.load(SIDE_MODEL_PATH)
         self.image_feature = ImageFeature()
-        self.frame = None
 
     @staticmethod
     def click_event(event, x, y, flags, params):
@@ -47,19 +47,26 @@ class StampController:
         top_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
         bottom_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
         bottom_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
+        while True:
+            cap_ret, _ = cap.read()
+            top_ret, _ = top_cap.read()
+            bottom_ret, _ = bottom_cap.read()
+            if cap_ret and top_ret and bottom_ret:
+                break
+            time.sleep(0.1)
         stamp_x = 0
         stamp_y = 0
         ard_threading = threading.Thread(target=self.ard_com.receive_command_arduino)
         ard_threading.start()
         while True:
-            _, self.frame = cap.read()
+            _, frame = cap.read()
             if self.ard_com.ard_res == "detect":
-                detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=self.frame)
+                detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame)
                 if detected_stamp_scores:
                     detected_stamp = detected_stamp_rect[detected_stamp_scores.index(max(detected_stamp_scores))]
                     stamp_x = int((detected_stamp[0] + detected_stamp[2]) / 2)
                     stamp_y = int((detected_stamp[1] + detected_stamp[3]) / 2)
-                    cv2.circle(self.frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
+                    cv2.circle(frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
                     print(f"[INFO] Pick Stamp at {stamp_x}, {stamp_y}")
                     self.ard_com.send_command_arduino(command=f"{stamp_x},{stamp_y}")
                     self.ard_com.ard_res = None
@@ -99,8 +106,8 @@ class StampController:
                 self.ard_com.ard_res = None
 
             if stamp_x != 0 and stamp_y != 0:
-                cv2.circle(self.frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
-            cv2.imshow("Stamp Detector", cv2.resize(self.frame, (1600, 1200)))
+                cv2.circle(frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
+            cv2.imshow("Stamp Detector", cv2.resize(frame, (1600, 1200)))
             cv2.setMouseCallback('Stamp Detector', self.click_event)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
