@@ -60,6 +60,8 @@ class StampController:
         ard_threading.start()
         while True:
             _, frame = cap.read()
+            _, top_frame = top_cap.read()
+            _, bottom_frame = bottom_cap.read()
             if self.ard_com.ard_res == "detect":
                 detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame)
                 if detected_stamp_scores:
@@ -71,11 +73,6 @@ class StampController:
                     self.ard_com.send_command_arduino(command=f"{stamp_x},{stamp_y}")
                     self.ard_com.ard_res = None
             if self.ard_com.ard_res == "moved":
-                _, top_frame = top_cap.read()
-                _, bottom_frame = bottom_cap.read()
-                cv2.imshow("Top Frame", cv2.resize(top_frame, (640, 480)))
-                cv2.imshow("Bottom Frame", cv2.resize(bottom_frame, (640, 480)))
-                cv2.waitKey(1000)
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
                 bottom_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=bottom_frame)
                 if len(top_stamps_rect) == 1 and len(bottom_stamps_rect) == 1:
@@ -108,6 +105,8 @@ class StampController:
             if stamp_x != 0 and stamp_y != 0:
                 cv2.circle(frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
             cv2.imshow("Stamp Detector", cv2.resize(frame, (1600, 1200)))
+            cv2.imshow("Top Frame", cv2.resize(top_frame, (640, 480)))
+            cv2.imshow("Bottom Frame", cv2.resize(bottom_frame, (640, 480)))
             cv2.setMouseCallback('Stamp Detector', self.click_event)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break

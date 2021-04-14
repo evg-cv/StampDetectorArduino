@@ -46,12 +46,12 @@ def save_file(content, filename, method):
     return
 
 
-def log_print(info_str, only_print=False):
+def log_print(info_str, file_path, only_print=False):
 
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(message)s',
                         datefmt='%d/%b/%Y %H:%M:%S',
-                        filename='result.log'
+                        filename=file_path
                         )
     # print(info_str)
 
