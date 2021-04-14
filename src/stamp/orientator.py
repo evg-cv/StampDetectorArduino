@@ -42,4 +42,4 @@ class StampOrientation:
 
 if __name__ == '__main__':
     StampOrientation().estimate_rotate_angle(
-        frame_path="/media/main/Data/Task/StampDetectorArduino/test/Screenshot from 2021-04-14 23-15-16.png")
+        frame_path="")

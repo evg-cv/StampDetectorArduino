@@ -1,8 +1,9 @@
+import os
 import math
 import numpy as np
 import cv2
 
-from settings import PIXEL_TO_MM
+from settings import PIXEL_TO_MM, CUR_DIR
 
 
 def order_points(pts):
@@ -30,6 +31,7 @@ def get_stamp_contour(roi_frame):
 
 
 def rotate_stamp(frame):
+    rotated_image_path = os.path.join(CUR_DIR, 'rotated.jpg')
     stamp_contour = get_stamp_contour(roi_frame=frame)
     stamp_rect = cv2.minAreaRect(stamp_contour)
     stamp_box = np.int0(cv2.boxPoints(stamp_rect))
@@ -53,12 +55,12 @@ def rotate_stamp(frame):
     mask = cv2.drawContours(black_image, [trans_contour], -1, (255, 255, 255), -1)
     blur_edge_frame = (mask / 255.0 * stamp_image).astype(np.uint8)
     final_stamp = blur_edge_frame + white_image
-    # cv2.imwrite("test50.jpg", final_stamp)
+    cv2.imwrite(rotated_image_path, final_stamp)
 
     # cv2.imshow("Rotated Frame", final_stamp)
     # cv2.waitKey()
 
-    return final_stamp
+    return rotated_image_path, final_stamp
 
 
 if __name__ == '__main__':

@@ -8,6 +8,7 @@ from src.stamp.detector import StampDetector
 from src.arduino.communicator import ArduinoCom
 from src.feature.extractor import ImageFeature
 from src.stamp.aligner import StampAligner
+from src.stamp.orientator import StampOrientation
 from src.stamp.rotator import rotate_stamp
 from settings import SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH, CONFIG_FILE_PATH
 
@@ -22,6 +23,7 @@ class StampController:
         self.stamp_detector = StampDetector()
         self.ard_com = ArduinoCom()
         self.stamp_aligner = StampAligner()
+        self.stamp_orientation = StampOrientation()
         self.side_model = joblib.load(SIDE_MODEL_PATH)
         self.image_feature = ImageFeature()
 
@@ -94,7 +96,16 @@ class StampController:
                             self.ard_com.send_command_arduino(command="retry")
                             self.ard_com.ard_res = None
                             continue
-                    final_stamp_image = rotate_stamp(frame=front_stamp_image)
+                    rotated_img_path, rotated_image = rotate_stamp(frame=front_stamp_image)
+                    orientation = self.stamp_orientation.estimate_rotate_angle(frame_path=rotated_img_path)
+                    if orientation == "normal":
+                        final_stamp_image = rotated_image
+                    elif orientation == "clock":
+                        final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_90_CLOCKWISE)
+                    elif orientation == "counter_clock":
+                        final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                    else:
+                        final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_180)
                     res = self.stamp_aligner.align_stamps(stamp_frame=final_stamp_image)
                     self.ard_com.send_command_arduino(command=res)
                 else:
