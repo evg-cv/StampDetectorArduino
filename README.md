@@ -59,6 +59,8 @@ This process is iterated by communicating between Arduino and PC.
 
 - Please create "model" folder in the "utils" folder and copy the 2 deep learning models into the "model" folder.
 
+- Please create "credential" folder in the "utils" folder and copy the vision_key.txt file into the "credential" folder.
+
 ## Execution
 
 - Configuration (in user_config file)
