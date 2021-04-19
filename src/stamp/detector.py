@@ -1,7 +1,7 @@
 import tensorflow as tf
 import cv2
 import numpy as np
-# import time
+import time
 
 from settings import STAMP_MODEL_PATH, CONFIDENCE, CUR_DIR
 
@@ -37,10 +37,10 @@ class StampDetector:
 
         [frm_height, frm_width] = frame.shape[:2]
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        # st_time = time.time()
+        st_time = time.time()
 
         (boxes, scores, classes, _) = self.detect_objects(frame_rgb)
-        # print(f"detection time: {time.time() - st_time}")
+        print(f"detection time: {time.time() - st_time}")
         detected_rect_list = []
         detected_scores = []
 
