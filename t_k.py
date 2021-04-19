@@ -69,7 +69,7 @@ def display_cam_view():
         # if frame1_ret:
         #     cv2.imshow("Frame1", frame1)
         if frame2_ret:
-            cv2.imshow("Frame2", cv2.remap(frame2, (1600, 1200)))
+            cv2.imshow("Frame2", cv2.resize(frame2, (1600, 1200)))
         # if frame3_ret:
         #     cv2.imshow("Frame3", frame3)
         if cv2.waitKey(1) & 0xFF == ord('q'):
