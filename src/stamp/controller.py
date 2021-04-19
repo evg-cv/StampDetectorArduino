@@ -115,9 +115,9 @@ class StampController:
 
             if stamp_x != 0 and stamp_y != 0:
                 cv2.circle(frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
-            cv2.imshow("Stamp Detector", frame)
-            cv2.imshow("Top Frame", top_frame, )
-            cv2.imshow("Bottom Frame", bottom_frame)
+            cv2.imshow("Stamp Detector", cv2.resize(frame, (1600, 1200)))
+            cv2.imshow("Top Frame", cv2.resize(top_frame, (800, 600)))
+            cv2.imshow("Bottom Frame", cv2.resize(bottom_frame, (800, 600)))
             cv2.setMouseCallback('Stamp Detector', self.click_event)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
