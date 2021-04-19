@@ -50,28 +50,28 @@ class CamThread:
 
 
 def display_cam_view():
-    cap1 = cv2.VideoCapture(0)
-    cap1.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-    cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+    # cap1 = cv2.VideoCapture(0)
+    # cap1.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
+    # cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
     cap2 = cv2.VideoCapture(8)
     cap2.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
     cap2.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
     cap2.set(cv2.CAP_PROP_FPS, 30)
-    cap3 = cv2.VideoCapture(2)
-    cap3.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-    cap3.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+    # cap3 = cv2.VideoCapture(2)
+    # cap3.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
+    # cap3.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
     while True:
-        frame1_ret, frame1 = cap1.read()
+        # frame1_ret, frame1 = cap1.read()
         # print(frame1.shape[:2])
         frame2_ret, frame2 = cap2.read()
-        frame3_ret, frame3 = cap3.read()
+        # frame3_ret, frame3 = cap3.read()
         # print(frame3.shape[:2])
-        if frame1_ret:
-            cv2.imshow("Frame1", frame1)
+        # if frame1_ret:
+        #     cv2.imshow("Frame1", frame1)
         if frame2_ret:
-            cv2.imshow("Frame2", frame2)
-        if frame3_ret:
-            cv2.imshow("Frame3", frame3)
+            cv2.imshow("Frame2", cv2.remap(frame2, (1600, 1200)))
+        # if frame3_ret:
+        #     cv2.imshow("Frame3", frame3)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap1.release()
