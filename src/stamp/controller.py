@@ -43,12 +43,12 @@ class StampController:
         cap = cv2.VideoCapture(self.stamp_detector_cam_num)
         top_cap = cv2.VideoCapture(self.top_cam_num)
         bottom_cap = cv2.VideoCapture(self.bottom_cam)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
-        top_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-        top_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
-        bottom_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-        bottom_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1600)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1200)
+        top_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1600)
+        top_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1200)
+        bottom_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1600)
+        bottom_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1200)
         while True:
             cap_ret, _ = cap.read()
             top_ret, _ = top_cap.read()
@@ -115,9 +115,9 @@ class StampController:
 
             if stamp_x != 0 and stamp_y != 0:
                 cv2.circle(frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
-            cv2.imshow("Stamp Detector", cv2.resize(frame, (1600, 1200)))
-            cv2.imshow("Top Frame", cv2.resize(top_frame, (640, 480)))
-            cv2.imshow("Bottom Frame", cv2.resize(bottom_frame, (640, 480)))
+            cv2.imshow("Stamp Detector", frame)
+            cv2.imshow("Top Frame", top_frame, )
+            cv2.imshow("Bottom Frame", bottom_frame)
             cv2.setMouseCallback('Stamp Detector', self.click_event)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
