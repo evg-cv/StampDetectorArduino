@@ -61,10 +61,10 @@ def display_cam_view():
     # cap3.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
     while True:
         frame1_ret, frame1 = cap1.read()
-        # print(frame1.shape[:2])
+        print(frame1.shape[:2])
         frame2_ret, frame2 = cap2.read()
         frame3_ret, frame3 = cap3.read()
-        # print(frame3.shape[:2])
+        print(frame3.shape[:2])
         if frame1_ret:
             cv2.imshow("Frame1", frame1)
         if frame2_ret:
