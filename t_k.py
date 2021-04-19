@@ -53,7 +53,7 @@ def display_cam_view():
     # cap1 = cv2.VideoCapture(0)
     # cap1.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
     # cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
-    cap2 = cv2.VideoCapture(8)
+    cap2 = cv2.VideoCapture(8, cv2.CAP_V4L2)
     cap2.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
     cap2.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
     cap2.set(cv2.CAP_PROP_FPS, 30)
