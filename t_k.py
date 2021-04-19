@@ -50,13 +50,25 @@ class CamThread:
 
 
 def display_cam_view():
+    width = 3840
+    height = 2160
+
+    gst_str = ('nvarguscamerasrc ! ' + 'video/x-raw(memory:NVMM), ' +
+               'width=(int)1920, height=(int)1080, ' +
+               'format=(string)NV12, framerate=(fraction)30/1 ! ' +
+               'nvvidconv flip-method=2 ! ' +
+               'video/x-raw, width=(int){}, height=(int){}, ' +
+               'format=(string)BGRx ! ' +
+               'videoconvert ! appsink').format(width, height)
+
+    cap2 = cv2.VideoCapture(gst_str, cv2.CAP_GSTREAMER)
     # cap1 = cv2.VideoCapture(0)
     # cap1.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
     # cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
-    cap2 = cv2.VideoCapture(8, cv2.CAP_V4L2)
-    cap2.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
-    cap2.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
-    cap2.set(cv2.CAP_PROP_FPS, 30)
+    # cap2 = cv2.VideoCapture(8, cv2.CAP_V4L2)
+    # cap2.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)
+    # cap2.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)
+    # cap2.set(cv2.CAP_PROP_FPS, 30)
     # cap3 = cv2.VideoCapture(2)
     # cap3.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
     # cap3.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
