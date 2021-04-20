@@ -46,15 +46,15 @@ def rotate_stamp(frame):
     trans_pts = np.float32([[0, 0], [0, height], [width, height], [width, 0]])
     trans = cv2.getPerspectiveTransform(origin_pts, trans_pts)
     trans_frame = cv2.warpPerspective(frame, trans, (width, height))
-    white_image = np.ones([height + round(PIXEL_TO_MM * 2), width + round(2 * PIXEL_TO_MM), 3], dtype=np.uint8) * 255
-    stamp_image = white_image.copy()
+    stamp_image = np.ones([height + round(PIXEL_TO_MM * 2), width + round(2 * PIXEL_TO_MM), 3], dtype=np.uint8) * 255
     stamp_image[round(PIXEL_TO_MM):round(PIXEL_TO_MM) + height, round(PIXEL_TO_MM):round(PIXEL_TO_MM) + width] = \
         trans_frame
     trans_contour = get_stamp_contour(roi_frame=stamp_image)
     black_image = np.zeros([height + round(PIXEL_TO_MM * 2), width + round(2 * PIXEL_TO_MM), 3], np.uint8)
     mask = cv2.drawContours(black_image, [trans_contour], -1, (255, 255, 255), -1)
+    not_mask = cv2.bitwise_not(mask)
     blur_edge_frame = (mask / 255.0 * stamp_image).astype(np.uint8)
-    final_stamp = blur_edge_frame + white_image
+    final_stamp = blur_edge_frame + not_mask
     cv2.imwrite(rotated_image_path, final_stamp)
 
     # cv2.imshow("Rotated Frame", final_stamp)
