@@ -89,8 +89,9 @@ class StampAligner:
     def pack_stamps(self, stamp_frame):
         status = "retry"
         height, width = stamp_frame.shape[:2]
+        processed_image = self.image_utils.run(frame=stamp_frame)
         self.rectangle_sizes.append((width, height))
-        self.rectangles.append(stamp_frame)
+        self.rectangles.append(processed_image)
         bins = [(self.paper_width, self.paper_height)]
         packer = newPacker(rotation=False)
         for r in self.rectangle_sizes:
@@ -106,7 +107,7 @@ class StampAligner:
                 _, x, y, w, h, _ = rect
                 frame = self.rectangles[self.rectangle_sizes.index((w, h))]
                 stamp_paper_image[self.paper_height - y - h:self.paper_height - y, x:x + w] = frame
-            processed_image = self.image_utils.run(frame=stamp_paper_image)
+            # processed_image = self.image_utils.run(frame=stamp_paper_image)
             output_images = glob.glob(os.path.join(OUTPUT_DIR, "*.jpg"))
             output_indices = []
             for o_image in output_images:
@@ -116,7 +117,7 @@ class StampAligner:
                 cnt_index = max(output_indices) + 1
             else:
                 cnt_index = 0
-            cv2.imwrite(os.path.join(OUTPUT_DIR, f'StampPaper{cnt_index}.jpg'), processed_image)
+            cv2.imwrite(os.path.join(OUTPUT_DIR, f'StampPaper{cnt_index}.jpg'), stamp_paper_image)
             print(f"[INFO] Successfully saved the final StampPaper Image into "
                   f"{os.path.join(OUTPUT_DIR, f'StampPaper{cnt_index}.jpg')}")
             self.previous_rects = []
