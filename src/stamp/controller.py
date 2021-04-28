@@ -75,17 +75,23 @@ class StampController:
                     self.ard_com.send_command_arduino(command=f"{stamp_x},{stamp_y}")
                     self.ard_com.ard_res = None
             if self.ard_com.ard_res == "moved":
+                top_height, top_width = top_frame.shape[:2]
+                bottom_height, bottom_width = bottom_frame.shape[:2]
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
                 bottom_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=bottom_frame)
                 if len(top_stamps_rect) == 1 and len(bottom_stamps_rect) == 1:
                     print("[INFO] Single Detected!")
                     self.ard_com.send_command_arduino(command="single")
-                    top_stamp_roi = top_frame[top_stamps_rect[0][1] - 20:top_stamps_rect[0][3] + 20,
-                                              top_stamps_rect[0][0] - 20:top_stamps_rect[0][2] + 20]
+                    top_stamp_roi = top_frame[max(top_stamps_rect[0][1] - 20, 0):min(top_stamps_rect[0][3] + 20,
+                                                                                     top_height),
+                                              max(top_stamps_rect[0][0] - 20, 0):min(top_stamps_rect[0][2] + 20,
+                                                                                     top_width)]
                     cv2.imwrite(TOP_IMAGE_PATH, top_stamp_roi)
                     bottom_stamp_roi = \
-                        bottom_frame[bottom_stamps_rect[0][1] - 20:bottom_stamps_rect[0][3] + 20,
-                                     bottom_stamps_rect[0][0] - 20:bottom_stamps_rect[0][2] + 20]
+                        bottom_frame[max(bottom_stamps_rect[0][1] - 20, 0):min(bottom_stamps_rect[0][3] + 20,
+                                                                               bottom_height),
+                                     max(bottom_stamps_rect[0][0] - 20, 0):min(bottom_stamps_rect[0][2] + 20,
+                                                                               bottom_width)]
                     cv2.imwrite(BOTTOM_IMAGE_PATH, bottom_stamp_roi)
                     if self.get_stamp_side(frame_path=TOP_IMAGE_PATH) == "front":
                         front_stamp_image = top_stamp_roi
