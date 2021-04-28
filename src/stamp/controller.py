@@ -10,6 +10,7 @@ from src.feature.extractor import ImageFeature
 from src.stamp.aligner import StampAligner
 from src.stamp.orientator import StampOrientation
 from src.stamp.rotator import rotate_stamp
+from src.image_processing.utils import ImageUtils
 from settings import SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH, CONFIG_FILE_PATH
 
 
@@ -24,6 +25,7 @@ class StampController:
         self.ard_com = ArduinoCom()
         self.stamp_aligner = StampAligner()
         self.stamp_orientation = StampOrientation()
+        self.image_utils = ImageUtils()
         self.side_model = joblib.load(SIDE_MODEL_PATH)
         self.image_feature = ImageFeature()
 
@@ -102,7 +104,8 @@ class StampController:
                             self.ard_com.send_command_arduino(command="retry")
                             self.ard_com.ard_res = None
                             continue
-                    rotated_img_path, rotated_image = rotate_stamp(frame=front_stamp_image)
+                    processed_image = self.image_utils.run(frame=front_stamp_image)
+                    rotated_img_path, rotated_image = rotate_stamp(frame=processed_image)
                     orientation = self.stamp_orientation.estimate_rotate_angle(frame_path=rotated_img_path)
                     if orientation == "normal":
                         final_stamp_image = rotated_image

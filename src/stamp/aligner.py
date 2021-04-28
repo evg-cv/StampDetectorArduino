@@ -6,7 +6,6 @@ import numpy as np
 import cv2
 
 from rectpack import newPacker
-from src.image_processing.utils import ImageUtils
 from settings import PIXEL_TO_MM, PAPER_HEIGHT, PAPER_WIDTH, CONFIG_FILE_PATH, OUTPUT_DIR
 
 
@@ -15,7 +14,6 @@ class StampAligner:
         params = configparser.ConfigParser()
         params.read(CONFIG_FILE_PATH)
         # self.collection_num = params.get('DEFAULT', 'collection_number')
-        self.image_utils = ImageUtils()
         self.paper_width = int(PAPER_WIDTH * PIXEL_TO_MM)
         self.paper_height = int(PAPER_HEIGHT * PIXEL_TO_MM)
         self.align_status = "Init"
@@ -64,8 +62,8 @@ class StampAligner:
                     stamp_paper_image[pos_y:pos_y + r_height, pos_x:pos_x + r_width] = r_stamp
                     width_pos += r_width
                 height_pos += r_stamps["height"]
-            processed_image = self.image_utils.run(frame=stamp_paper_image)
-            # processed_image = stamp_paper_image
+            # processed_image = self.image_utils.run(frame=stamp_paper_image)
+            processed_image = stamp_paper_image
             output_images = glob.glob(os.path.join(OUTPUT_DIR, "*.jpg"))
             output_indices = []
             for o_image in output_images:
@@ -89,9 +87,8 @@ class StampAligner:
     def pack_stamps(self, stamp_frame):
         status = "retry"
         height, width = stamp_frame.shape[:2]
-        processed_image = self.image_utils.run(frame=stamp_frame)
         self.rectangle_sizes.append((width, height))
-        self.rectangles.append(processed_image)
+        self.rectangles.append(stamp_frame)
         bins = [(self.paper_width, self.paper_height)]
         packer = newPacker(rotation=False)
         for r in self.rectangle_sizes:
@@ -107,7 +104,6 @@ class StampAligner:
                 _, x, y, w, h, _ = rect
                 frame = self.rectangles[self.rectangle_sizes.index((w, h))]
                 stamp_paper_image[self.paper_height - y - h:self.paper_height - y, x:x + w] = frame
-            # processed_image = self.image_utils.run(frame=stamp_paper_image)
             output_images = glob.glob(os.path.join(OUTPUT_DIR, "*.jpg"))
             output_indices = []
             for o_image in output_images:
