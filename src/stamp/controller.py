@@ -27,11 +27,11 @@ class StampController:
         self.side_model = joblib.load(SIDE_MODEL_PATH)
         self.image_feature = ImageFeature()
 
-    @staticmethod
-    def click_event(event, x, y, flags, params):
-
-        if event == cv2.EVENT_LBUTTONDOWN:
-            print(f"[INFO] Point X: {int(x * 3264 / 1600)}, Point Y: {int(y * 2448 / 1200)}")
+    # @staticmethod
+    # def click_event(event, x, y, flags, params):
+    #
+    #     if event == cv2.EVENT_LBUTTONDOWN:
+    #         print(f"[INFO] Point X: {int(x * 3264 / 1600)}, Point Y: {int(y * 2448 / 1200)}")
 
     def get_stamp_side(self, frame_path):
         frame_feature = self.image_feature.get_feature_from_file(img_path=frame_path)
@@ -106,7 +106,7 @@ class StampController:
                         final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
                     else:
                         final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_180)
-                    res = self.stamp_aligner.align_stamps(stamp_frame=final_stamp_image)
+                    res = self.stamp_aligner.pack_stamps(stamp_frame=final_stamp_image)
                     self.ard_com.send_command_arduino(command=res)
                 else:
                     print("[INFO] Multi or None Detected")
@@ -118,7 +118,7 @@ class StampController:
             cv2.imshow("Stamp Detector", cv2.resize(frame, (1600, 1200)))
             cv2.imshow("Top Frame", cv2.resize(top_frame, (800, 600)))
             cv2.imshow("Bottom Frame", cv2.resize(bottom_frame, (800, 600)))
-            cv2.setMouseCallback('Stamp Detector', self.click_event)
+            # cv2.setMouseCallback('Stamp Detector', self.click_event)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         self.ard_com.receive_ret = False
