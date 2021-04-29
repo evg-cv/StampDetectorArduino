@@ -104,7 +104,8 @@ class StampController:
                             self.ard_com.send_command_arduino(command="retry")
                             self.ard_com.ard_res = None
                             continue
-                    processed_image = self.image_utils.run(frame=front_stamp_image)
+                    processed_image = front_stamp_image
+                    # processed_image = self.image_utils.run(frame=front_stamp_image)
                     rotated_img_path, rotated_image = rotate_stamp(frame=processed_image)
                     orientation = self.stamp_orientation.estimate_rotate_angle(frame_path=rotated_img_path)
                     if orientation == "normal":
