@@ -24,8 +24,12 @@ def order_points(pts):
 def get_stamp_contour(roi_frame):
     gray_frame = cv2.cvtColor(roi_frame, cv2.COLOR_BGR2GRAY)
     _, thresh_frame = cv2.threshold(gray_frame, 200, 255, cv2.THRESH_BINARY_INV)
-    st_contours, _ = cv2.findContours(thresh_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    dilate_frame = cv2.dilate(thresh_frame, np.ones((3, 3), np.uint8), iterations=1)
+    st_contours, _ = cv2.findContours(dilate_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     stamp_contour = sorted(st_contours, key=cv2.contourArea, reverse=True)[0]
+    # cv2.drawContours(roi_frame, [stamp_contour], 0, (0, 0, 255), 1)
+    # cv2.imshow("Contour Frame", roi_frame)
+    # cv2.waitKey()
 
     return stamp_contour
 
@@ -55,10 +59,9 @@ def rotate_stamp(frame):
     not_mask = cv2.bitwise_not(mask)
     blur_edge_frame = (mask / 255.0 * stamp_image).astype(np.uint8)
     final_stamp = blur_edge_frame + not_mask
-    cv2.imwrite(rotated_image_path, final_stamp)
-
-    # cv2.imshow("Rotated Frame", final_stamp)
+    # cv2.imshow("Final Frame", final_stamp)
     # cv2.waitKey()
+    cv2.imwrite(rotated_image_path, final_stamp)
 
     return rotated_image_path, final_stamp
 
