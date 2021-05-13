@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import time
 
-from settings import STAMP_MODEL_PATH, CONFIDENCE, CUR_DIR
+from settings import STAMP_MODEL_PATH, CONFIDENCE, CUR_DIR, DETECTION_REGION
 
 
 class StampDetector:
@@ -48,8 +48,10 @@ class StampDetector:
             if scores[0][i] >= CONFIDENCE:
                 left, top = int(boxes[0][i][1] * frm_width), int(boxes[0][i][0] * frm_height)
                 right, bottom = int(boxes[0][i][3] * frm_width), int(boxes[0][i][2] * frm_height)
-                detected_rect_list.append([left, top, right, bottom])
-                detected_scores.append(scores[0][i])
+                if DETECTION_REGION[0] <= 0.5 * (left + right) <= DETECTION_REGION[2] and \
+                        DETECTION_REGION[1] <= 0.5 * (top + bottom) <= DETECTION_REGION[3]:
+                    detected_rect_list.append([left, top, right, bottom])
+                    detected_scores.append(scores[0][i])
                 # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 1)
         # cv2.imshow("Stamps", cv2.resize(frame, None, fx=0.5, fy=0.5))
         # cv2.waitKey()

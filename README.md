@@ -48,12 +48,20 @@ This process is iterated by communicating between Arduino and PC.
 
 - Environment
 
-    Ubuntu 18.04(Recommended), Windows 10, Python 3.6
+    Ubuntu 18.04, Windows 10(Recommended), Python 3.6
 
 - Dependency Installation
 
     Please navigate to this project directory and run the following command in the terminal.
+    * Ubuntu 18.04
     ```
+        sudo apt-get install libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mixer-dev
+        sudo apt-get install xclip
+        pip3 install -r requirements.txt
+    ```
+    * Windows
+    ```
+        python3 -m pip install docutils pygments pypiwin32 kivy.deps.sdl2 kivy.deps.glew --extra-index-url https://kivy.org/downloads/packages/simple/
         pip3 install -r requirements.txt
     ```
 

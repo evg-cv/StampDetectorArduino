@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 
 from rectpack import newPacker
+from utils.folder_file_manager import make_directory_if_not_exists
 from settings import PIXEL_TO_MM, PAPER_HEIGHT, PAPER_WIDTH, CONFIG_FILE_PATH, OUTPUT_DIR
 
 
@@ -84,7 +85,9 @@ class StampAligner:
         else:
             return "retry"
 
-    def pack_stamps(self, stamp_frame):
+    def pack_stamps(self, stamp_frame, collection_num, picture_num):
+        collection_dir = make_directory_if_not_exists(os.path.join(OUTPUT_DIR, f"collection{collection_num}"))
+        align_stamp_path = os.path.join(collection_dir, f'Picture{picture_num}.jpg')
         status = "retry"
         height, width = stamp_frame.shape[:2]
         self.rectangle_sizes.append((width, height))
@@ -97,25 +100,14 @@ class StampAligner:
             packer.add_bin(*b)
         packer.pack()
         all_rects = packer.rect_list()
+        stamp_paper_image = np.ones([self.paper_height, self.paper_width, 3], dtype=np.uint8) * 255
+        for rect in self.previous_rects:
+            _, x, y, w, h, _ = rect
+            frame = self.rectangles[self.rectangle_sizes.index((w, h))]
+            stamp_paper_image[self.paper_height - y - h:self.paper_height - y, x:x + w] = frame
+        cv2.imwrite(align_stamp_path, stamp_paper_image)
         if len(all_rects) < len(self.rectangles):
             status = "complete"
-            stamp_paper_image = np.ones([self.paper_height, self.paper_width, 3], dtype=np.uint8) * 255
-            for rect in self.previous_rects:
-                _, x, y, w, h, _ = rect
-                frame = self.rectangles[self.rectangle_sizes.index((w, h))]
-                stamp_paper_image[self.paper_height - y - h:self.paper_height - y, x:x + w] = frame
-            output_images = glob.glob(os.path.join(OUTPUT_DIR, "*.jpg"))
-            output_indices = []
-            for o_image in output_images:
-                image_index = int(ntpath.basename(o_image).replace("StampPaper", "").replace(".jpg", ""))
-                output_indices.append(image_index)
-            if output_indices:
-                cnt_index = max(output_indices) + 1
-            else:
-                cnt_index = 0
-            cv2.imwrite(os.path.join(OUTPUT_DIR, f'StampPaper{cnt_index}.jpg'), stamp_paper_image)
-            print(f"[INFO] Successfully saved the final StampPaper Image into "
-                  f"{os.path.join(OUTPUT_DIR, f'StampPaper{cnt_index}.jpg')}")
             self.previous_rects = []
             self.rectangles = []
             self.rectangle_sizes = []
@@ -124,14 +116,14 @@ class StampAligner:
         else:
             self.previous_rects = all_rects
 
-        return status
+        return status, align_stamp_path
 
 
 if __name__ == '__main__':
     stamp_aligner = StampAligner()
     image_paths = glob.glob(os.path.join("", "*.jpg"))
     for i_path in image_paths:
-        res = stamp_aligner.pack_stamps(stamp_frame=cv2.imread(i_path))
+        res = stamp_aligner.pack_stamps(stamp_frame=cv2.imread(i_path), collection_num=0, picture_num=0)
         print(f"[INFO] Image: {ntpath.basename(i_path)}, Res: {res}")
         if res == "complete":
             break

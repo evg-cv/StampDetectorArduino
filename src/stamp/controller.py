@@ -116,7 +116,8 @@ class StampController:
                         final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
                     else:
                         final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_180)
-                    res = self.stamp_aligner.pack_stamps(stamp_frame=final_stamp_image)
+                    res, _ = self.stamp_aligner.pack_stamps(stamp_frame=final_stamp_image, collection_num=1,
+                                                            picture_num=1)
                     self.ard_com.send_command_arduino(command=res)
                 else:
                     print("[INFO] Multi or None Detected")
