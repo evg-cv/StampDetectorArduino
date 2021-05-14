@@ -42,7 +42,7 @@ class StampDetector:
 
         (boxes, scores, classes, _) = self.detect_objects(frame_rgb)
         print(f"detection time: {time.time() - st_time}")
-        print(scores)
+        print(scores[0][:3])
         detected_rect_list = []
         detected_scores = []
 

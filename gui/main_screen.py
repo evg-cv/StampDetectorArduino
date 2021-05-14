@@ -124,7 +124,7 @@ class MainScreen(Screen):
                     print(f"[INFO] Pick Stamp at {stamp_x}, {stamp_y}")
                     self.ard_com.send_command_arduino(command=f"{stamp_x},{stamp_y}")
                     self.ard_com.ard_res = None
-            if self.ard_com.ard_res == "moved":
+            if self.ard_com.ard_res == "m":
                 top_frame = self.ids.top_cam.get_frame()
                 bottom_frame = self.ids.bottom_cam.get_frame()
                 if top_frame is None or bottom_frame is None:

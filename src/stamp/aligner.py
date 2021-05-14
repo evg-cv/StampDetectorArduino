@@ -103,8 +103,11 @@ class StampAligner:
         stamp_paper_image = np.ones([self.paper_height, self.paper_width, 3], dtype=np.uint8) * 255
         for rect in self.previous_rects:
             _, x, y, w, h, _ = rect
-            frame = self.rectangles[self.rectangle_sizes.index((w, h))]
-            stamp_paper_image[self.paper_height - y - h:self.paper_height - y, x:x + w] = frame
+            try:
+                frame = self.rectangles[self.rectangle_sizes.index((w, h))]
+                stamp_paper_image[self.paper_height - y - h:self.paper_height - y, x:x + w] = frame
+            except Exception as e:
+                print(e)
         cv2.imwrite(align_stamp_path, stamp_paper_image)
         if len(all_rects) < len(self.rectangles):
             status = "complete"
