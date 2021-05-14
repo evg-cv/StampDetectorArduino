@@ -200,15 +200,15 @@ class MainScreen(Screen):
         return
 
     def stop_process(self):
-        pic_per_collection = int(self.ids.pic_per_collection.text)
-        # self.start_ret = False
-        # self.ard_com.receive_ret = False
-        # if self.run_time_threading is not None:
-        #     self.run_time_threading.join()
-        # if self.ard_threading is not None:
-        #     self.ard_threading.join()
-        # if self.main_threading is not None:
-        #     self.main_threading.join()
+        # pic_per_collection = int(self.ids.pic_per_collection.text)
+        self.start_ret = False
+        self.ard_com.receive_ret = False
+        if self.run_time_threading is not None:
+            self.run_time_threading.join()
+        if self.ard_threading is not None:
+            self.ard_threading.join()
+        if self.main_threading is not None:
+            self.main_threading.join()
         self.processing_time = 0
         self.stamp_num = 0
         self.picture_num = 1
@@ -216,11 +216,11 @@ class MainScreen(Screen):
         self.ids.finished_collection.text = "00"
         self.ids.no_stamps.text = "00"
         self.ids.run_time.text = "00:00:00"
-        if self.picture_num <= pic_per_collection:
-            if os.path.exists(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}")):
-                shutil.rmtree(os.path.exists(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}")))
-        else:
-            self.collection_num += 1
+        # if self.picture_num <= pic_per_collection:
+        #     if os.path.exists(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}")):
+        #         shutil.rmtree(os.path.exists(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}")))
+        # else:
+        #     self.collection_num += 1
 
         return
 
