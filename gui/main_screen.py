@@ -106,9 +106,7 @@ class MainScreen(Screen):
         pic_per_collection = int(self.ids.pic_per_collection.text)
         while self.start_ret:
             frame = self.ids.stamp_cam.get_frame()
-            top_frame = self.ids.top_cam.get_frame()
-            bottom_frame = self.ids.bottom_cam.get_frame()
-            if frame is None or top_frame is None or bottom_frame is None:
+            if frame is None:
                 break
             if self.ard_com.ard_res == "d":
                 detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame)
@@ -120,6 +118,10 @@ class MainScreen(Screen):
                     self.ard_com.send_command_arduino(command=f"{stamp_x},{stamp_y}")
                     self.ard_com.ard_res = None
             if self.ard_com.ard_res == "moved":
+                top_frame = self.ids.top_cam.get_frame()
+                bottom_frame = self.ids.bottom_cam.get_frame()
+                if top_frame is None or bottom_frame is None:
+                    break
                 top_height, top_width = top_frame.shape[:2]
                 bottom_height, bottom_width = bottom_frame.shape[:2]
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
