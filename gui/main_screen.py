@@ -71,7 +71,7 @@ class MainScreen(Screen):
     def on_enter(self, *args):
         self.ids.stamp_cam.start(port_num=self.stamp_detector_cam_num)
         self.ids.top_cam.start(port_num=self.top_cam_num)
-        # self.ids.bottom_cam.start(port_num=self.bottom_cam)
+        self.ids.bottom_cam.start(port_num=self.bottom_cam)
 
     def on_leave(self, *args):
         self.ids.stamp_cam.stop()
