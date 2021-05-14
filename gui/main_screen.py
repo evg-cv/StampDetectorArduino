@@ -111,6 +111,7 @@ class MainScreen(Screen):
                 break
             if self.ard_com.ard_res == "d":
                 detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame)
+                cv2.imwrite("stamp.jpg", frame)
                 print(detected_stamp_scores)
                 if detected_stamp_scores:
                     detected_stamp = detected_stamp_rect[detected_stamp_scores.index(max(detected_stamp_scores))]
