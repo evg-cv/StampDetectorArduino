@@ -110,7 +110,7 @@ class MainScreen(Screen):
             bottom_frame = self.ids.bottom_cam.get_frame()
             if frame is None or top_frame is None or bottom_frame is None:
                 break
-            if self.ard_com.ard_res == "detect":
+            if self.ard_com.ard_res == "d":
                 detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame)
                 if detected_stamp_scores:
                     detected_stamp = detected_stamp_rect[detected_stamp_scores.index(max(detected_stamp_scores))]
