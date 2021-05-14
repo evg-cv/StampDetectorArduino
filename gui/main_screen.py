@@ -203,9 +203,12 @@ class MainScreen(Screen):
         pic_per_collection = int(self.ids.pic_per_collection.text)
         self.start_ret = False
         self.ard_com.receive_ret = False
-        self.run_time_threading.join()
-        self.ard_threading.join()
-        self.main_threading.join()
+        if self.run_time_threading is not None:
+            self.run_time_threading.join()
+        if self.ard_threading is not None:
+            self.ard_threading.join()
+        if self.main_threading is not None:
+            self.main_threading.join()
         self.processing_time = 0
         self.stamp_num = 0
         self.picture_num = 1
