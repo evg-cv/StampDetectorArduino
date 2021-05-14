@@ -66,7 +66,7 @@ class StampController:
             _, frame = cap.read()
             _, top_frame = top_cap.read()
             _, bottom_frame = bottom_cap.read()
-            if self.ard_com.ard_res == "detect":
+            if self.ard_com.ard_res == "d":
                 detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame)
                 if detected_stamp_scores:
                     detected_stamp = detected_stamp_rect[detected_stamp_scores.index(max(detected_stamp_scores))]
