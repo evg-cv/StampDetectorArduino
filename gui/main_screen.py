@@ -177,6 +177,8 @@ class MainScreen(Screen):
                     self.stamp_num += 1
                     if res == "complete":
                         self.picture_num += 1
+                    print(self.rotated_image_path)
+                    print(self.align_image_path)
                     Clock.schedule_once(self.insert_image)
                     self.ids.finished_collection.text = str(self.finished_collection)
                     self.ids.no_stamps.text = str(self.stamp_num)
