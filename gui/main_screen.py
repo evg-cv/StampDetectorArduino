@@ -11,7 +11,7 @@ import cv2
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivy.clock import Clock
+from kivy.clock import Clock, mainthread
 from src.stamp.detector import StampDetector
 from src.arduino.communicator import ArduinoCom
 from src.feature.extractor import ImageFeature
@@ -90,7 +90,8 @@ class MainScreen(Screen):
 
         return stamp_side
 
-    def insert_image(self, dt):
+    @mainthread
+    def insert_image(self):
         self.ids.rotated_image.source = self.rotated_image_path
         self.ids.align_image.source = self.align_image_path
         # print(self.rotated_image_path)
@@ -179,7 +180,7 @@ class MainScreen(Screen):
                     self.stamp_num += 1
                     if res == "complete":
                         self.picture_num += 1
-                    Clock.schedule_once(self.insert_image)
+                    Clock.schedule_once(lambda dt: self.insert_image())
                     self.ids.finished_collection.text = str(self.finished_collection)
                     self.ids.no_stamps.text = str(self.stamp_num)
                     self.ard_com.send_command_arduino(command=res)
