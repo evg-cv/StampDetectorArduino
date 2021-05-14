@@ -78,6 +78,7 @@ class MainScreen(Screen):
         self.ids.top_cam.stop()
         self.ids.bottom_cam.stop()
         self.start_ret = False
+        self.ard_com.receive_ret = False
         self.ard_threading.join()
         self.run_time_threading.join()
         self.main_threading.join()
@@ -197,6 +198,7 @@ class MainScreen(Screen):
     def stop_process(self):
         pic_per_collection = int(self.ids.pic_per_collection.text)
         self.start_ret = False
+        self.ard_com.receive_ret = False
         self.run_time_threading.join()
         self.ard_threading.join()
         self.main_threading.join()
@@ -217,12 +219,14 @@ class MainScreen(Screen):
 
     def pause_process(self):
         self.start_ret = False
+        self.ard_com.receive_ret = False
         self.run_time_threading.join()
         self.ard_threading.join()
         self.main_threading.join()
 
     def close_window(self):
         self.start_ret = False
+        self.ard_com.receive_ret = False
         self.run_time_threading.join()
         self.ard_threading.join()
         self.main_threading.join()
