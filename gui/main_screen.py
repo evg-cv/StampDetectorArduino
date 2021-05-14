@@ -96,6 +96,8 @@ class MainScreen(Screen):
 
     def start_process(self):
         self.start_ret = True
+        self.ard_com.receive_ret = True
+        self.ard_com.send_command_arduino(command=f"0, 0")
         self.ard_threading = threading.Thread(target=self.ard_com.receive_command_arduino)
         self.ard_threading.start()
         self.run_time_threading = threading.Thread(target=self.display_processing_time)
