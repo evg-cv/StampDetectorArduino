@@ -183,8 +183,9 @@ class MainScreen(Screen):
     @mainthread
     def insert_image(self, rotate_img_path, align_img_path):
         self.ids.rotated_image.source = rotate_img_path
-        self.ids.align_image.source = rotate_img_path
+        self.ids.align_image.source = align_img_path
         self.ids.rotated_image.reload()
+        self.ids.align_image.reload()
         self.ids.finished_collection.text = str(self.finished_collection)
         self.ids.no_stamps.text = str(self.stamp_num)
         # print(self.rotated_image_path)
