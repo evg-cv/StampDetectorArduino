@@ -62,7 +62,7 @@ class MainScreen(Screen):
             c_index = int(ntpath.basename(c_dir).replace("collection", ""))
             output_indices.append(c_index)
         if output_indices:
-            self.collection_num = max(output_indices)
+            self.collection_num = max(output_indices) + 1
         else:
             self.collection_num = 1
 
@@ -103,6 +103,8 @@ class MainScreen(Screen):
         self.main_threading = threading.Thread(target=self.run_main_process)
         self.main_threading.start()
 
+        return
+
     def run_main_process(self):
         pic_per_collection = int(self.ids.pic_per_collection.text)
         while self.start_ret:
@@ -111,8 +113,6 @@ class MainScreen(Screen):
                 break
             if self.ard_com.ard_res == "d":
                 detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame)
-                cv2.imwrite("stamp.jpg", frame)
-                print(detected_stamp_scores)
                 if detected_stamp_scores:
                     detected_stamp = detected_stamp_rect[detected_stamp_scores.index(max(detected_stamp_scores))]
                     stamp_x = int((detected_stamp[0] + detected_stamp[2]) / 2)
@@ -183,6 +183,8 @@ class MainScreen(Screen):
                     print("[INFO] Multi or None Detected")
                     self.ard_com.send_command_arduino(command="none")
                 self.ard_com.ard_res = None
+
+        return
 
     def display_processing_time(self):
         start_time = time.time()
