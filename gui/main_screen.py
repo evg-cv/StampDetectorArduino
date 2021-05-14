@@ -51,8 +51,6 @@ class MainScreen(Screen):
         self.stamp_num = 0
         self.processing_time = 0
         self.finished_collection = 0
-        self.rotated_image_path = ""
-        self.align_image_path = ""
         self.__initialize_collection_dir()
 
     def __initialize_collection_dir(self):
@@ -89,13 +87,6 @@ class MainScreen(Screen):
         stamp_side = self.side_model.predict([frame_feature])[0]
 
         return stamp_side
-
-    @mainthread
-    def insert_image(self):
-        self.ids.rotated_image.source = self.rotated_image_path
-        self.ids.align_image.source = self.align_image_path
-        # print(self.rotated_image_path)
-        # print(self.align_image_path)
 
     def start_process(self):
         self.start_ret = True
@@ -159,8 +150,8 @@ class MainScreen(Screen):
                             continue
                     processed_image = front_stamp_image
                     # processed_image = self.image_utils.run(frame=front_stamp_image)
-                    self.rotated_image_path, rotated_image = rotate_stamp(frame=processed_image)
-                    orientation = self.stamp_orientation.estimate_rotate_angle(frame_path=self.rotated_image_path)
+                    rotated_image_path, rotated_image = rotate_stamp(frame=processed_image)
+                    orientation = self.stamp_orientation.estimate_rotate_angle(frame_path=rotated_image_path)
                     if orientation == "normal":
                         final_stamp_image = rotated_image
                     elif orientation == "clock":
@@ -174,15 +165,13 @@ class MainScreen(Screen):
                         self.collection_num += 1
                         self.stamp_num = 0
                         self.finished_collection += 1
-                    res, self.align_image_path = self.stamp_aligner.pack_stamps(stamp_frame=final_stamp_image,
-                                                                                collection_num=self.collection_num,
-                                                                                picture_num=self.picture_num)
+                    res, align_image_path = self.stamp_aligner.pack_stamps(stamp_frame=final_stamp_image,
+                                                                           collection_num=self.collection_num,
+                                                                           picture_num=self.picture_num)
                     self.stamp_num += 1
                     if res == "complete":
                         self.picture_num += 1
-                    Clock.schedule_once(lambda dt: self.insert_image())
-                    self.ids.finished_collection.text = str(self.finished_collection)
-                    self.ids.no_stamps.text = str(self.stamp_num)
+                    Clock.schedule_once(lambda dt: self.insert_image(rotated_image_path, align_image_path))
                     self.ard_com.send_command_arduino(command=res)
                 else:
                     print("[INFO] Multi or None Detected")
@@ -190,6 +179,15 @@ class MainScreen(Screen):
                 self.ard_com.ard_res = None
 
         return
+
+    @mainthread
+    def insert_image(self, rotate_img_path, align_img_path):
+        self.ids.rotated_image.source = rotate_img_path
+        self.ids.align_image.source = align_img_path
+        self.ids.finished_collection.text = str(self.finished_collection)
+        self.ids.no_stamps.text = str(self.stamp_num)
+        # print(self.rotated_image_path)
+        # print(self.align_image_path)
 
     def display_processing_time(self):
         start_time = time.time()
