@@ -93,8 +93,8 @@ class MainScreen(Screen):
     def insert_image(self, dt):
         self.ids.rotated_image.source = self.rotated_image_path
         self.ids.align_image.source = self.align_image_path
-        print(self.rotated_image_path)
-        print(self.align_image_path)
+        # print(self.rotated_image_path)
+        # print(self.align_image_path)
 
     def start_process(self):
         self.start_ret = True
