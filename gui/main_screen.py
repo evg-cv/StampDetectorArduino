@@ -216,11 +216,11 @@ class MainScreen(Screen):
         self.ids.finished_collection.text = "00"
         self.ids.no_stamps.text = "00"
         self.ids.run_time.text = "00:00:00"
-        # if self.picture_num <= pic_per_collection:
-        #     if os.path.exists(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}")):
-        #         shutil.rmtree(os.path.exists(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}")))
-        # else:
-        #     self.collection_num += 1
+        if self.picture_num <= pic_per_collection:
+            if os.path.exists(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}")):
+                shutil.rmtree(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}"))
+        else:
+            self.collection_num += 1
 
         return
 
