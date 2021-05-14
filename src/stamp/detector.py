@@ -35,6 +35,7 @@ class StampDetector:
 
     def detect_from_images(self, frame):
 
+        frame = frame[DETECTION_REGION[1]:DETECTION_REGION[3], DETECTION_REGION[0]:DETECTION_REGION[2]]
         [frm_height, frm_width] = frame.shape[:2]
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         st_time = time.time()
@@ -48,10 +49,9 @@ class StampDetector:
             if scores[0][i] >= CONFIDENCE:
                 left, top = int(boxes[0][i][1] * frm_width), int(boxes[0][i][0] * frm_height)
                 right, bottom = int(boxes[0][i][3] * frm_width), int(boxes[0][i][2] * frm_height)
-                if DETECTION_REGION[0] <= 0.5 * (left + right) <= DETECTION_REGION[2] and \
-                        DETECTION_REGION[1] <= 0.5 * (top + bottom) <= DETECTION_REGION[3]:
-                    detected_rect_list.append([left, top, right, bottom])
-                    detected_scores.append(scores[0][i])
+                detected_rect_list.append([left + DETECTION_REGION[0], top + DETECTION_REGION[1],
+                                           right + DETECTION_REGION[0], bottom + DETECTION_REGION[1]])
+                detected_scores.append(scores[0][i])
                 # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 1)
         # cv2.imshow("Stamps", cv2.resize(frame, None, fx=0.5, fy=0.5))
         # cv2.waitKey()
