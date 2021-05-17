@@ -122,6 +122,8 @@ class MainScreen(Screen):
                 bottom_frame = self.ids.bottom_cam.get_frame()
                 if top_frame is None or bottom_frame is None:
                     break
+                cv2.imwrite("top_frame.jpg", top_frame)
+                cv2.imwrite("bottom_frame.jpg", bottom_frame)
                 top_height, top_width = top_frame.shape[:2]
                 bottom_height, bottom_width = bottom_frame.shape[:2]
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
