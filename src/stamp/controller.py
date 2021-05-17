@@ -76,7 +76,10 @@ class StampController:
                     stamp_y = int((detected_stamp[1] + detected_stamp[3]) / 2)
                     cv2.circle(frame, (stamp_x, stamp_y), 5, (0, 0, 255), 3)
                     print(f"[INFO] Pick Stamp at {stamp_x}, {stamp_y}")
-                    self.ard_com.send_command_arduino(command=f"{stamp_x},{stamp_y}")
+                    ard_x = (stamp_y - 996) * 0.09368 + 190
+                    ard_y = (stamp_x - 1249) * 0.09368 - 20
+                    print(f"[INFO] Pick Stamp at {ard_x}, {ard_y} as Robot Arm Pos")
+                    self.ard_com.send_command_arduino(command=f"{ard_x},{ard_y}")
                     self.ard_com.ard_res = None
             if self.ard_com.ard_res == "moved":
                 top_height, top_width = top_frame.shape[:2]

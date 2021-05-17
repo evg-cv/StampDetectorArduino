@@ -116,7 +116,10 @@ class MainScreen(Screen):
                     stamp_x = int((detected_stamp[0] + detected_stamp[2]) / 2)
                     stamp_y = int((detected_stamp[1] + detected_stamp[3]) / 2)
                     print(f"[INFO] Pick Stamp at {stamp_x}, {stamp_y}")
-                    self.ard_com.send_command_arduino(command=f"{stamp_x},{stamp_y}")
+                    ard_x = (stamp_y - 996) * 0.09368 + 190
+                    ard_y = (stamp_x - 1249) * 0.09368 - 20
+                    print(f"[INFO] Pick Stamp at {ard_x}, {ard_y} as Robot Arm Pos")
+                    self.ard_com.send_command_arduino(command=f"{ard_x},{ard_y}")
                     self.ard_com.ard_res = None
             if self.ard_com.ard_res == "m":
                 top_frame = self.ids.top_cam.get_frame()
