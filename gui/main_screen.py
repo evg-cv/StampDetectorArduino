@@ -109,7 +109,8 @@ class MainScreen(Screen):
             if frame is None:
                 break
             if self.ard_com.ard_res == "d":
-                detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame)
+                detected_stamp_rect, detected_stamp_scores = self.stamp_detector.detect_from_images(frame=frame,
+                                                                                                    stamp_top_ret=True)
                 if detected_stamp_scores:
                     detected_stamp = detected_stamp_rect[detected_stamp_scores.index(max(detected_stamp_scores))]
                     stamp_x = int((detected_stamp[0] + detected_stamp[2]) / 2)
