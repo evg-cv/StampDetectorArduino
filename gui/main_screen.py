@@ -84,9 +84,10 @@ class MainScreen(Screen):
 
     def get_stamp_side(self, frame_path):
         frame_feature = self.image_feature.get_feature_from_file(img_path=frame_path)
+        stamp_side_proba = max(self.side_model.predict_proba([frame_feature])[0])
         stamp_side = self.side_model.predict([frame_feature])[0]
 
-        return stamp_side
+        return stamp_side, stamp_side_proba
 
     def start_process(self):
         self.start_ret = True
@@ -139,15 +140,23 @@ class MainScreen(Screen):
                                      max(bottom_stamps_rect[0][0] - 20, 0):min(bottom_stamps_rect[0][2] + 20,
                                                                                bottom_width)]
                     cv2.imwrite(BOTTOM_IMAGE_PATH, bottom_stamp_roi)
-                    if self.get_stamp_side(frame_path=TOP_IMAGE_PATH) == "front":
-                        front_stamp_image = top_stamp_roi
-                    else:
-                        if self.get_stamp_side(frame_path=BOTTOM_IMAGE_PATH) == "front":
-                            front_stamp_image = bottom_stamp_roi
+                    top_side, top_proba = self.get_stamp_side(frame_path=TOP_IMAGE_PATH)
+                    bottom_side, bottom_proba = self.get_stamp_side(frame_path=BOTTOM_IMAGE_PATH)
+                    if top_side == "front" and bottom_side == "front":
+                        if top_proba > bottom_proba:
+                            front_stamp_image = top_stamp_roi
                         else:
-                            self.ard_com.send_command_arduino(command="retry")
-                            self.ard_com.ard_res = None
-                            continue
+                            front_stamp_image = bottom_stamp_roi
+                    else:
+                        if top_side == "front":
+                            front_stamp_image = top_stamp_roi
+                        else:
+                            if bottom_side == "front":
+                                front_stamp_image = bottom_stamp_roi
+                            else:
+                                self.ard_com.send_command_arduino(command="retry")
+                                self.ard_com.ard_res = None
+                                continue
                     processed_image = front_stamp_image
                     # processed_image = self.image_utils.run(frame=front_stamp_image)
                     rotated_image_path, rotated_image = rotate_stamp(frame=processed_image)
