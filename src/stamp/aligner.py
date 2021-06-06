@@ -25,7 +25,6 @@ class StampAligner:
         self.stamp_status = []
         self.rectangles = []
         self.rectangle_sizes = []
-        self.previous_rects = []
 
     def align_stamps(self, stamp_frame):
         height, width = stamp_frame.shape[:2]
@@ -101,7 +100,7 @@ class StampAligner:
         packer.pack()
         all_rects = packer.rect_list()
         stamp_paper_image = np.ones([self.paper_height, self.paper_width, 3], dtype=np.uint8) * 255
-        for rect in self.previous_rects:
+        for rect in all_rects:
             _, x, y, w, h, _ = rect
             try:
                 frame = self.rectangles[self.rectangle_sizes.index((w, h))]
@@ -111,13 +110,10 @@ class StampAligner:
         cv2.imwrite(align_stamp_path, stamp_paper_image)
         if len(all_rects) < len(self.rectangles):
             status = "complete"
-            self.previous_rects = []
             self.rectangles = []
             self.rectangle_sizes = []
             # cv2.imshow("Packed Frame", cv2.resize(stamp_paper_image, None, fx=0.3, fy=0.3))
             # cv2.waitKey()
-        else:
-            self.previous_rects = all_rects
 
         return status, align_stamp_path
 
@@ -128,5 +124,5 @@ if __name__ == '__main__':
     for i_path in image_paths:
         res = stamp_aligner.pack_stamps(stamp_frame=cv2.imread(i_path), collection_num=0, picture_num=0)
         print(f"[INFO] Image: {ntpath.basename(i_path)}, Res: {res}")
-        if res == "complete":
+        if res[0] == "complete":
             break
