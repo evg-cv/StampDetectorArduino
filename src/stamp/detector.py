@@ -70,8 +70,8 @@ if __name__ == '__main__':
     import os
 
     stamp_detector = StampDetector()
-    # rect_len = stamp_detector.detect_from_images(frame=cv2.imread(""))
-    img_files = glob.glob(os.path.join(CUR_DIR, 'test', "*.jpg"))
+    # rect_len = stamp_detector.detect_from_images(frame=cv2.imread("))
+    img_files = glob.glob(os.path.join(CUR_DIR, 'new model', 'Bottom', "*.png"))
 
     for i_file in img_files:
         rect_len, _ = stamp_detector.detect_from_images(frame=cv2.imread(i_file))

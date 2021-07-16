@@ -20,7 +20,8 @@ from src.stamp.orientator import StampOrientation
 from src.stamp.rotator import rotate_stamp
 from src.image_processing.utils import ImageUtils
 # from utils.folder_file_manager import log_print
-from settings import MAIN_SCREEN_PATH, SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH, CONFIG_FILE_PATH, OUTPUT_DIR
+from settings import MAIN_SCREEN_PATH, SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH, CONFIG_FILE_PATH, \
+    OUTPUT_DIR, TEMP_IMAGE_DIR
 
 Builder.load_file(MAIN_SCREEN_PATH)
 
@@ -126,8 +127,8 @@ class MainScreen(Screen):
                 bottom_frame = self.ids.bottom_cam.get_frame()
                 if top_frame is None or bottom_frame is None:
                     break
-                cv2.imwrite("top_frame.jpg", top_frame)
-                cv2.imwrite("bottom_frame.jpg", bottom_frame)
+                cv2.imwrite(os.path.join(TEMP_IMAGE_DIR, f"top_frame_{time.time()}.jpg"), top_frame)
+                cv2.imwrite(os.path.join(TEMP_IMAGE_DIR, f"bottom_frame_{time.time()}.jpg"), bottom_frame)
                 top_height, top_width = top_frame.shape[:2]
                 bottom_height, bottom_width = bottom_frame.shape[:2]
                 top_stamps_rect, _ = self.stamp_detector.detect_from_images(frame=top_frame)
