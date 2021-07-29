@@ -7,6 +7,7 @@ CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(CUR_DIR, 'utils', 'model')
 OUTPUT_DIR = make_directory_if_not_exists(os.path.join(CUR_DIR, 'output'))
 TEMP_IMAGE_DIR = make_directory_if_not_exists(os.path.join(CUR_DIR, 'temp'))
+TEMP_FINAL_IMAGE_DIR = make_directory_if_not_exists(os.path.join(CUR_DIR, 'temp_final'))
 
 CREDENTIAL_PATH = os.path.join(CUR_DIR, 'utils', 'credential', 'vision_key.txt')
 STAMP_MODEL_PATH = os.path.join(MODEL_DIR, 'stamp_detector_v2.pb')
@@ -21,7 +22,7 @@ MAIN_SCREEN = "main_screen"
 APP_WIDTH = '1920'
 APP_HEIGHT = '1080'
 ROTATION_Y_THREAD = 50
-CONFIDENCE = 0.9
+CONFIDENCE = 0.6
 BAUD_RATE = 115200
 STAMP_AREA_THRESH = 0.02
 PIXEL_TO_MM = 11.2

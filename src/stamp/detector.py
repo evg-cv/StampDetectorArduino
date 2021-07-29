@@ -75,5 +75,5 @@ if __name__ == '__main__':
 
     for i_file in img_files:
         rect_len, _ = stamp_detector.detect_from_images(frame=cv2.imread(i_file))
-        if len(rect_len) < 2:
+        if len(rect_len) >= 2:
             print(f"[WARN] {i_file}: {rect_len}")

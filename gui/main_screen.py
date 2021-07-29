@@ -21,7 +21,7 @@ from src.stamp.rotator import rotate_stamp
 from src.image_processing.utils import ImageUtils
 # from utils.folder_file_manager import log_print
 from settings import MAIN_SCREEN_PATH, SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH, CONFIG_FILE_PATH, \
-    OUTPUT_DIR, TEMP_IMAGE_DIR
+    OUTPUT_DIR, TEMP_IMAGE_DIR, TEMP_FINAL_IMAGE_DIR
 
 Builder.load_file(MAIN_SCREEN_PATH)
 
@@ -181,6 +181,8 @@ class MainScreen(Screen):
                         self.collection_num += 1
                         self.stamp_num = 0
                         self.finished_collection += 1
+                    cv2.imwrite(os.path.join(TEMP_FINAL_IMAGE_DIR, f"{self.picture_num}_{self.stamp_num}.jpg"),
+                                final_stamp_image)
                     res, align_image_path = self.stamp_aligner.pack_stamps(stamp_frame=final_stamp_image,
                                                                            collection_num=self.collection_num,
                                                                            picture_num=self.picture_num)
