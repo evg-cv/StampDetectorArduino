@@ -224,6 +224,7 @@ class MainScreen(Screen):
 
     def stop_process(self):
         pic_per_collection = int(self.ids.pic_per_collection.text)
+        self.ard_com.send_command_arduino(command="stop")
         self.start_ret = False
         self.ard_com.receive_ret = False
         if self.run_time_threading is not None:

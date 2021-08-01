@@ -100,20 +100,33 @@ class StampAligner:
         packer.pack()
         all_rects = packer.rect_list()
         stamp_paper_image = np.ones([self.paper_height, self.paper_width, 3], dtype=np.uint8) * 255
+        drawn_indices = []
         for rect in all_rects:
             _, x, y, w, h, _ = rect
+            frame = None
             try:
-                frame = self.rectangles[self.rectangle_sizes.index((w, h))]
+                indices = [i for i, x in enumerate(self.rectangle_sizes) if x == (w, h)]
+                if len(indices) == 1:
+                    frame = self.rectangles[indices[0]]
+                    drawn_indices.append(indices[0])
+                else:
+                    for idx in indices:
+                        if idx not in drawn_indices:
+                            frame = self.rectangles[idx]
+                            drawn_indices.append(idx)
+                            break
                 stamp_paper_image[self.paper_height - y - h:self.paper_height - y, x:x + w] = frame
             except Exception as e:
                 print(e)
-        cv2.imwrite(align_stamp_path, stamp_paper_image)
         if len(all_rects) < len(self.rectangles):
             status = "complete"
-            self.rectangles = []
-            self.rectangle_sizes = []
-            # cv2.imshow("Packed Frame", cv2.resize(stamp_paper_image, None, fx=0.3, fy=0.3))
-            # cv2.waitKey()
+            self.rectangles = [stamp_frame]
+            self.rectangle_sizes = [(width, height)]
+        else:
+            cv2.imwrite(align_stamp_path, stamp_paper_image)
+        # cv2.imshow("Stamp Frame", stamp_frame)
+        # cv2.imshow("Packed Frame", cv2.resize(stamp_paper_image, None, fx=0.3, fy=0.3))
+        # cv2.waitKey()
 
         return status, align_stamp_path
 
@@ -121,8 +134,10 @@ class StampAligner:
 if __name__ == '__main__':
     stamp_aligner = StampAligner()
     image_paths = glob.glob(os.path.join("", "*.jpg"))
-    for i_path in image_paths:
+    sorted_image_paths = sorted(image_paths, key=lambda k: int(ntpath.basename(k).replace(".jpg", "").replace("_", "")))
+    for i_path in sorted_image_paths:
+        print(f"[INFO] Image: {ntpath.basename(i_path)}")
         res = stamp_aligner.pack_stamps(stamp_frame=cv2.imread(i_path), collection_num=0, picture_num=0)
-        print(f"[INFO] Image: {ntpath.basename(i_path)}, Res: {res}")
+        print(res)
         if res[0] == "complete":
             break
