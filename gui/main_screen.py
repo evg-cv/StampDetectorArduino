@@ -122,6 +122,9 @@ class MainScreen(Screen):
                     print(f"[INFO] Pick Stamp at {ard_x}, {ard_y} as Robot Arm Pos")
                     self.ard_com.send_command_arduino(command=f"{ard_x},{ard_y}")
                     self.ard_com.ard_res = None
+                else:
+                    self.ard_com.send_command_arduino(command="150,0")
+                    self.ard_com.ard_res = None
             if self.ard_com.ard_res == "m":
                 top_frame = self.ids.top_cam.get_frame()
                 bottom_frame = self.ids.bottom_cam.get_frame()
