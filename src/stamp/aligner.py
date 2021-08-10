@@ -87,7 +87,7 @@ class StampAligner:
     def pack_stamps(self, stamp_frame, collection_num, picture_num):
         collection_dir = make_directory_if_not_exists(os.path.join(OUTPUT_DIR, f"collection{collection_num}"))
         align_stamp_path = os.path.join(collection_dir, f'Picture{picture_num}.jpg')
-        status = "retry"
+        complete_status = False
         height, width = stamp_frame.shape[:2]
         self.rectangle_sizes.append((width, height))
         self.rectangles.append(stamp_frame)
@@ -119,7 +119,7 @@ class StampAligner:
             except Exception as e:
                 print(e)
         if len(all_rects) < len(self.rectangles):
-            status = "complete"
+            complete_status = True
             self.rectangles = [stamp_frame]
             self.rectangle_sizes = [(width, height)]
         else:
@@ -128,7 +128,7 @@ class StampAligner:
         # cv2.imshow("Packed Frame", cv2.resize(stamp_paper_image, None, fx=0.3, fy=0.3))
         # cv2.waitKey()
 
-        return status, align_stamp_path
+        return complete_status, align_stamp_path
 
 
 if __name__ == '__main__':

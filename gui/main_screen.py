@@ -179,21 +179,23 @@ class MainScreen(Screen):
                         final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
                     else:
                         final_stamp_image = cv2.rotate(rotated_image, cv2.ROTATE_180)
-                    if self.picture_num > pic_per_collection:
-                        self.picture_num = 1
-                        self.collection_num += 1
-                        self.stamp_num = 0
-                        self.finished_collection += 1
                     cv2.imwrite(os.path.join(TEMP_FINAL_IMAGE_DIR, f"{self.picture_num}_{self.stamp_num}.jpg"),
                                 final_stamp_image)
                     res, align_image_path = self.stamp_aligner.pack_stamps(stamp_frame=final_stamp_image,
                                                                            collection_num=self.collection_num,
                                                                            picture_num=self.picture_num)
                     self.stamp_num += 1
-                    if res == "complete":
+                    ard_cmd = "retry"
+                    if res:
                         self.picture_num += 1
+                    if self.picture_num > pic_per_collection:
+                        self.picture_num = 1
+                        self.collection_num += 1
+                        self.stamp_num = 0
+                        self.finished_collection += 1
+                        ard_cmd = "complete"
                     Clock.schedule_once(lambda dt: self.insert_image(rotated_image_path, align_image_path))
-                    self.ard_com.send_command_arduino(command=res)
+                    self.ard_com.send_command_arduino(command=ard_cmd)
                 else:
                     print("[INFO] Multi or None Detected")
                     self.ard_com.send_command_arduino(command="none")
