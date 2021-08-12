@@ -244,7 +244,7 @@ class MainScreen(Screen):
         self.ids.finished_collection.text = "00"
         self.ids.no_stamps.text = "00"
         self.ids.run_time.text = "00:00:00"
-        self.ard_com.send_command_arduino(command="stop")
+        # self.ard_com.send_command_arduino(command="stop")
         if self.picture_num <= pic_per_collection:
             if os.path.exists(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}")):
                 shutil.rmtree(os.path.join(OUTPUT_DIR, f"collection{self.collection_num}"))
