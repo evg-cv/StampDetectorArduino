@@ -24,7 +24,7 @@ def order_points(pts):
 def get_stamp_contour(roi_frame):
     gray_frame = cv2.cvtColor(roi_frame, cv2.COLOR_BGR2GRAY)
     _, thresh_frame = cv2.threshold(gray_frame, 200, 255, cv2.THRESH_BINARY_INV)
-    dilate_frame = cv2.dilate(thresh_frame, np.ones((3, 3), np.uint8), iterations=1)
+    dilate_frame = cv2.dilate(thresh_frame, np.ones((4, 4), np.uint8), iterations=1)
     st_contours, _ = cv2.findContours(dilate_frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     stamp_contour = sorted(st_contours, key=cv2.contourArea, reverse=True)[0]
     # cv2.drawContours(roi_frame, [stamp_contour], 0, (0, 0, 255), 1)
@@ -53,9 +53,13 @@ def rotate_stamp(frame):
     stamp_image = np.ones([height + round(PIXEL_TO_MM * 2), width + round(2 * PIXEL_TO_MM), 3], dtype=np.uint8) * 255
     stamp_image[round(PIXEL_TO_MM):round(PIXEL_TO_MM) + height, round(PIXEL_TO_MM):round(PIXEL_TO_MM) + width] = \
         trans_frame
+    # cv2.imshow("Trans Image", stamp_image)
+    # cv2.waitKey()
     trans_contour = get_stamp_contour(roi_frame=stamp_image)
     black_image = np.zeros([height + round(PIXEL_TO_MM * 2), width + round(2 * PIXEL_TO_MM), 3], np.uint8)
     mask = cv2.drawContours(black_image, [trans_contour], -1, (255, 255, 255), -1)
+    # cv2.imshow("Mask Image", mask)
+    # cv2.waitKey()
     not_mask = cv2.bitwise_not(mask)
     blur_edge_frame = (mask / 255.0 * stamp_image).astype(np.uint8)
     final_stamp = blur_edge_frame + not_mask
@@ -67,4 +71,10 @@ def rotate_stamp(frame):
 
 
 if __name__ == '__main__':
-    rotate_stamp(frame=cv2.imread(""))
+    from src.stamp.detector import StampDetector
+
+    top_frame = cv2.imread("")
+    top_height, top_width = top_frame.shape[:2]
+    top_stamps_rect, _ = StampDetector().detect_from_images(frame=top_frame)
+    rotate_stamp(frame=top_frame[max(top_stamps_rect[0][1] - 20, 0):min(top_stamps_rect[0][3] + 20, top_height),
+                                 max(top_stamps_rect[0][0] - 20, 0):min(top_stamps_rect[0][2] + 20, top_width)])
