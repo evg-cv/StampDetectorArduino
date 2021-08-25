@@ -208,6 +208,9 @@ class MainScreen(Screen):
                             ard_cmd = "complete"
                         Clock.schedule_once(lambda dt: self.insert_image(rotated_image_path, align_image_path))
                         self.ard_com.send_command_arduino(command=ard_cmd)
+                    else:
+                        print("[INFO] Multi or None Detected")
+                        self.ard_com.send_command_arduino(command="none")
                 else:
                     print("[INFO] Multi or None Detected")
                     self.ard_com.send_command_arduino(command="none")
