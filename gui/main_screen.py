@@ -103,7 +103,6 @@ class MainScreen(Screen):
     def start_process(self):
         # self.start_ret = True
         self.ard_com.receive_ret = True
-        self.ard_com.send_command_arduino(command=f"1000, 1000")
         self.ard_threading = threading.Thread(target=self.ard_com.receive_command_arduino)
         self.ard_threading.start()
         self.run_time_threading = threading.Thread(target=self.display_processing_time)
@@ -138,6 +137,7 @@ class MainScreen(Screen):
                 break
         cv2.destroyAllWindows()
         print(f"[INFO] ROI at Back Camera: {self.back_init_pos}")
+        self.ard_com.send_command_arduino(command=f"1000, 1000")
         while self.start_ret:
             frame = self.ids.stamp_cam.get_frame()
             if frame is None:
