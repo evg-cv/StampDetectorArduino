@@ -74,31 +74,6 @@ class MainScreen(Screen):
             self.collection_num = max(output_indices) + 1
         else:
             self.collection_num = 1
-        while True:
-            frame = self.ids.top_cam.get_frame()
-            if frame is not None:
-                cv2.putText(frame, "Please select region by Mouse and press Space key to confirm",
-                            (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
-                self.front_init_pos = cv2.selectROI("Correct ROI Selection of Front Camera", frame, fromCenter=False,
-                                                    showCrosshair=True)
-            if self.front_init_pos is not None and self.front_init_pos != (0, 0, 0, 0):
-                front_init_ret = True
-                break
-        cv2.destroyAllWindows()
-        print(f"[INFO] ROI at Front Camera: {self.front_init_pos}")
-        if front_init_ret:
-            while True:
-                frame = self.ids.bottom_cam.get_frame()
-                if frame is not None:
-                    cv2.putText(frame, "Please select region by Mouse and press Space key to confirm",
-                                (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
-                    self.back_init_pos = cv2.selectROI("Correct ROI Selection of Back Camera", frame,
-                                                       fromCenter=False, showCrosshair=True)
-                if self.back_init_pos is not None and self.back_init_pos != (0, 0, 0, 0):
-                    self.start_ret = True
-                    break
-            cv2.destroyAllWindows()
-            print(f"[INFO] ROI at Back Camera: {self.back_init_pos}")
 
         return
 
@@ -140,6 +115,29 @@ class MainScreen(Screen):
 
     def run_main_process(self):
         pic_per_collection = int(self.ids.pic_per_collection.text)
+        while True:
+            frame = self.ids.top_cam.get_frame()
+            if frame is not None:
+                cv2.putText(frame, "Please select region by Mouse and press Space key to confirm",
+                            (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
+                self.front_init_pos = cv2.selectROI("Correct ROI Selection of Front Camera", frame, fromCenter=False,
+                                                    showCrosshair=True)
+            if self.front_init_pos is not None and self.front_init_pos != (0, 0, 0, 0):
+                break
+        cv2.destroyAllWindows()
+        print(f"[INFO] ROI at Front Camera: {self.front_init_pos}")
+        while True:
+            frame = self.ids.bottom_cam.get_frame()
+            if frame is not None:
+                cv2.putText(frame, "Please select region by Mouse and press Space key to confirm",
+                            (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
+                self.back_init_pos = cv2.selectROI("Correct ROI Selection of Back Camera", frame,
+                                                   fromCenter=False, showCrosshair=True)
+            if self.back_init_pos is not None and self.back_init_pos != (0, 0, 0, 0):
+                self.start_ret = True
+                break
+        cv2.destroyAllWindows()
+        print(f"[INFO] ROI at Back Camera: {self.back_init_pos}")
         while self.start_ret:
             frame = self.ids.stamp_cam.get_frame()
             if frame is None:
