@@ -21,7 +21,7 @@ from src.stamp.rotator import rotate_stamp
 from src.image_processing.utils import ImageUtils
 # from utils.folder_file_manager import log_print
 from settings import MAIN_SCREEN_PATH, SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH, CONFIG_FILE_PATH, \
-    OUTPUT_DIR, TEMP_IMAGE_DIR, TEMP_FINAL_IMAGE_DIR
+    OUTPUT_DIR, TEMP_IMAGE_DIR, TEMP_FINAL_IMAGE_DIR, FRONT_ROI, BACK_ROI
 
 Builder.load_file(MAIN_SCREEN_PATH)
 
@@ -47,8 +47,8 @@ class MainScreen(Screen):
         self.run_time_threading = None
         self.main_threading = None
         self.start_ret = False
-        self.front_init_pos = None
-        self.back_init_pos = None
+        self.front_init_pos = FRONT_ROI
+        self.back_init_pos = BACK_ROI
         self.collection_num = 1
         self.picture_num = 1
         self.stamp_num = 0
@@ -103,6 +103,7 @@ class MainScreen(Screen):
     def start_process(self):
         # self.start_ret = True
         self.ard_com.receive_ret = True
+        self.ard_com.send_command_arduino(command=f"1000, 1000")
         self.ard_threading = threading.Thread(target=self.ard_com.receive_command_arduino)
         self.ard_threading.start()
         self.run_time_threading = threading.Thread(target=self.display_processing_time)
@@ -114,30 +115,6 @@ class MainScreen(Screen):
 
     def run_main_process(self):
         pic_per_collection = int(self.ids.pic_per_collection.text)
-        while True:
-            frame = self.ids.top_cam.get_frame()
-            if frame is not None:
-                cv2.putText(frame, "Please select region by Mouse and press Space key to confirm",
-                            (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
-                self.front_init_pos = cv2.selectROI("Correct ROI Selection of Front Camera", frame, fromCenter=False,
-                                                    showCrosshair=True)
-            if self.front_init_pos is not None and self.front_init_pos != (0, 0, 0, 0):
-                break
-        cv2.destroyAllWindows()
-        print(f"[INFO] ROI at Front Camera: {self.front_init_pos}")
-        while True:
-            frame = self.ids.bottom_cam.get_frame()
-            if frame is not None:
-                cv2.putText(frame, "Please select region by Mouse and press Space key to confirm",
-                            (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
-                self.back_init_pos = cv2.selectROI("Correct ROI Selection of Back Camera", frame,
-                                                   fromCenter=False, showCrosshair=True)
-            if self.back_init_pos is not None and self.back_init_pos != (0, 0, 0, 0):
-                self.start_ret = True
-                break
-        cv2.destroyAllWindows()
-        print(f"[INFO] ROI at Back Camera: {self.back_init_pos}")
-        self.ard_com.send_command_arduino(command=f"1000, 1000")
         while self.start_ret:
             frame = self.ids.stamp_cam.get_frame()
             if frame is None:
