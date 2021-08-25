@@ -79,6 +79,24 @@ def display_cam_view():
     cv2.destroyAllWindows()
 
 
+def select_roi():
+    cap = cv2.VideoCapture(0)
+    init_pos = None
+    while True:
+        ret, frame = cap.read()
+        if ret:
+            cv2.putText(frame, "Please select region by Mouse and press Space key to confirm",
+                        (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
+            init_pos = cv2.selectROI("Correct Region Selection", frame, fromCenter=False, showCrosshair=True)
+            cv2.rectangle(frame, (init_pos[0], init_pos[1]), (init_pos[2], init_pos[3]), (0, 0, 255), 1)
+            cv2.imshow("Rect", frame)
+            cv2.waitKey()
+        if init_pos is not None and init_pos != (0, 0, 0, 0):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
+    print(init_pos)
+
+
 if __name__ == '__main__':
-    # CamThread().run()
-    display_cam_view()
+    select_roi()
