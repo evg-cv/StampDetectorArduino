@@ -19,6 +19,7 @@ from src.stamp.aligner import StampAligner
 from src.stamp.orientator import StampOrientation
 from src.stamp.rotator import rotate_stamp
 from src.image_processing.utils import ImageUtils
+from src.stamp.collection_creator import create_main_collection_image
 # from utils.folder_file_manager import log_print
 from settings import MAIN_SCREEN_PATH, SIDE_MODEL_PATH, TOP_IMAGE_PATH, BOTTOM_IMAGE_PATH, CONFIG_FILE_PATH, \
     OUTPUT_DIR, TEMP_IMAGE_DIR, TEMP_FINAL_IMAGE_DIR, FRONT_ROI, BACK_ROI
@@ -115,6 +116,9 @@ class MainScreen(Screen):
 
     def run_main_process(self):
         pic_per_collection = int(self.ids.pic_per_collection.text)
+        if pic_per_collection not in [2, 4, 6, 8, 10]:
+            self.start_ret = False
+            print("[WARNING] Please input number of picture per collection among 2, 4, 6, 8 and 10")
         while self.start_ret:
             frame = self.ids.stamp_cam.get_frame()
             if frame is None:
@@ -201,6 +205,7 @@ class MainScreen(Screen):
                         if res:
                             self.picture_num += 1
                         if self.picture_num > pic_per_collection:
+                            create_main_collection_image(collection_num=self.collection_num)
                             self.picture_num = 1
                             self.collection_num += 1
                             self.stamp_num = 0
