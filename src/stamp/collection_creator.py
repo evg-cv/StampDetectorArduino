@@ -32,7 +32,7 @@ def create_main_collection_image(collection_num):
                         pic_idx - cols + 1)] = pic_image
 
     cv2.imwrite(main_collection_pic_path, collection_image)
-    print(f"[INFO] Successfully saved collection image into {main_collection_pic_path}")
+    # print(f"[INFO] Successfully saved collection image into {main_collection_pic_path}")
 
     return
 
