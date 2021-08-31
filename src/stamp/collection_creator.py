@@ -31,7 +31,7 @@ def create_main_collection_image(collection_num):
                 collection_image[pic_height:pic_height * 2, pic_width * (pic_idx - cols):pic_width * (
                         pic_idx - cols + 1)] = pic_image
 
-    cv2.imwrite(main_collection_pic_path, collection_image)
+    cv2.imwrite(main_collection_pic_path, cv2.resize(collection_image, None, fx=0.7, fy=0.7))
     # print(f"[INFO] Successfully saved collection image into {main_collection_pic_path}")
 
     return
