@@ -205,14 +205,15 @@ class MainScreen(Screen):
                         if res:
                             self.picture_num += 1
                         if self.picture_num > pic_per_collection:
+                            ard_cmd = "complete"
+                        Clock.schedule_once(lambda dt: self.insert_image(rotated_image_path, align_image_path))
+                        self.ard_com.send_command_arduino(command=ard_cmd)
+                        if self.picture_num > pic_per_collection:
                             create_main_collection_image(collection_num=self.collection_num)
                             self.picture_num = 1
                             self.collection_num += 1
                             self.stamp_num = 0
                             self.finished_collection += 1
-                            ard_cmd = "complete"
-                        Clock.schedule_once(lambda dt: self.insert_image(rotated_image_path, align_image_path))
-                        self.ard_com.send_command_arduino(command=ard_cmd)
                     else:
                         print("[INFO] Multi or None Detected")
                         self.ard_com.send_command_arduino(command="none")
